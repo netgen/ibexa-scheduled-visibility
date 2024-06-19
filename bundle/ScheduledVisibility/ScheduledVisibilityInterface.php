@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility;
 
-use Ibexa\Core\Repository\Values\Content\Content;
+use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\StrategyType;
 
 interface ScheduledVisibilityInterface
