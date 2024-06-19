@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class NetgenIbexaScheduledVisibilityExtension extends Extension
+final class NetgenIbexaScheduledVisibilityExtension extends Extension
 {
     public function getAlias(): string
     {

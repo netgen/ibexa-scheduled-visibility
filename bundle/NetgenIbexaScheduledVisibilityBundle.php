@@ -6,4 +6,4 @@ namespace Netgen\Bundle\IbexaScheduledVisibilityBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class NetgenIbexaScheduledVisibilityBundle extends Bundle {}
+final class NetgenIbexaScheduledVisibilityBundle extends Bundle {}

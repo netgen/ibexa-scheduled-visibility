@@ -8,7 +8,7 @@ use Exception;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\DependencyInjection\NetgenIbexaScheduledVisibilityExtension;
 
-class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
+final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
 {
     /**
      * @throws Exception
