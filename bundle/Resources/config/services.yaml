@@ -31,3 +31,12 @@ services:
             - '@?logger'
         tags:
             - { name: monolog.logger, channel: ngscheduledvisibility }
+
+    Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Strategy\ObjectState:
+        arguments:
+            - '@ibexa.api.repository'
+            - '@ibexa.api.service.object_state'
+            - "@service_container"
+            - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: ngscheduledvisibility }

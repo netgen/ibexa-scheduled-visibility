@@ -33,24 +33,7 @@ final class Section implements ScheduledVisibilityInterface
 
         $hiddenSectionId = $this->container->getParameter('netgen_ibexa_scheduled_visibility.sections.hidden.section_id');
 
-        try {
-            $hiddenSection = $this->repository->sudo(
-                fn (): \Ibexa\Contracts\Core\Repository\Values\Content\Section => $this->sectionService->loadSection($hiddenSectionId),
-            );
-            $this->repository->sudo(
-                fn () => $this->sectionService->assignSection($content->getContentInfo(), $hiddenSection),
-            );
-        } catch (NotFoundException $e) {
-            $this->logger->error(
-                sprintf(
-                    'Section with id #%d was not found: %s',
-                    $hiddenSectionId,
-                    $e->getMessage(),
-                ),
-            );
-
-            return;
-        }
+        $this->toggleSection($content, $hiddenSectionId);
     }
 
     public function reveal(Content $content): void
@@ -61,24 +44,7 @@ final class Section implements ScheduledVisibilityInterface
 
         $visibleSectionId = $this->container->getParameter('netgen_ibexa_scheduled_visibility.sections.visible.section_id');
 
-        try {
-            $visibleSection = $this->repository->sudo(
-                fn (): \Ibexa\Contracts\Core\Repository\Values\Content\Section => $this->sectionService->loadSection($visibleSectionId),
-            );
-            $this->repository->sudo(
-                fn () => $this->sectionService->assignSection($content->getContentInfo(), $visibleSection),
-            );
-        } catch (NotFoundException $e) {
-            $this->logger->error(
-                sprintf(
-                    'Section with id #%d was not found: %s',
-                    $visibleSectionId,
-                    $e->getMessage(),
-                ),
-            );
-
-            return;
-        }
+        $this->toggleSection($content, $visibleSectionId);
     }
 
     public function getType(): StrategyType
@@ -91,5 +57,27 @@ final class Section implements ScheduledVisibilityInterface
         $hiddenSectionId = $this->container->getParameter('netgen_ibexa_scheduled_visibility.sections.hidden.section_id');
 
         return $content->getContentInfo()->getSectionId() === $hiddenSectionId;
+    }
+
+    private function toggleSection(Content $content, int $sectionId): void
+    {
+        try {
+            $section = $this->repository->sudo(
+                fn (): \Ibexa\Contracts\Core\Repository\Values\Content\Section => $this->sectionService->loadSection($sectionId),
+            );
+            $this->repository->sudo(
+                fn () => $this->sectionService->assignSection($content->getContentInfo(), $section),
+            );
+        } catch (NotFoundException $e) {
+            $this->logger->error(
+                sprintf(
+                    'Section with id #%d was not found: %s',
+                    $sectionId,
+                    $e->getMessage(),
+                ),
+            );
+
+            return;
+        }
     }
 }
