@@ -1,0 +1,33 @@
+services:
+    Netgen\Bundle\IbexaScheduledVisibilityBundle\EventListener\ScheduledVisibilityListener:
+        arguments:
+            - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    _instanceof:
+        Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface:
+            tags: [ 'scheduled_visibility_strategy' ]
+
+    Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService:
+        arguments:
+            - !tagged_iterator { tag: 'scheduled_visibility_strategy' }
+            - "@service_container"
+
+    Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Strategy\Location:
+        arguments:
+            - '@ibexa.api.repository'
+            - '@ibexa.api.service.content'
+            - '@ibexa.api.service.location'
+            - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: ngscheduledvisibility }
+
+    Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Strategy\Section:
+        arguments:
+            - '@ibexa.api.repository'
+            - '@ibexa.api.service.section'
+            - "@service_container"
+            - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: ngscheduledvisibility }

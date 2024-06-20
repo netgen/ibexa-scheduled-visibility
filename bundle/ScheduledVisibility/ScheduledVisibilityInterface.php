@@ -13,5 +13,7 @@ interface ScheduledVisibilityInterface
 
     public function reveal(Content $content): void;
 
+    public function isHidden(Content $content): bool;
+
     public function getType(): StrategyType;
 }
