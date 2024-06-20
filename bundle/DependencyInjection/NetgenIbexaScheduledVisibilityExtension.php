@@ -93,16 +93,12 @@ final class NetgenIbexaScheduledVisibilityExtension extends Extension
     private function processObjectStatesConfiguration(array $configuration, ContainerBuilder $container): void
     {
         $container->setParameter(
-            'netgen_ibexa_scheduled_visibility.object_states.visible.object_state_group_id',
-            $configuration['object_states']['visible']['object_state_group_id'],
+            'netgen_ibexa_scheduled_visibility.object_states.object_state_group_id',
+            $configuration['object_states']['object_state_group_id'],
         );
         $container->setParameter(
             'netgen_ibexa_scheduled_visibility.object_states.visible.object_state_id',
             $configuration['object_states']['visible']['object_state_id'],
-        );
-        $container->setParameter(
-            'netgen_ibexa_scheduled_visibility.object_states.hidden.object_state_group_id',
-            $configuration['object_states']['hidden']['object_state_group_id'],
         );
         $container->setParameter(
             'netgen_ibexa_scheduled_visibility.object_states.hidden.object_state_id',

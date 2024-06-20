@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\DependencyInjection;
 
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\StrategyType;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -50,7 +51,7 @@ final class Configuration implements ConfigurationInterface
             ->children()
                 ->enumNode('strategy')
                     ->info('Configure strategy for scheduled visibility mechanism')
-                    ->values(['location', 'section', 'object_state'])
+                    ->values([StrategyType::Location->value, StrategyType::Section->value, StrategyType::ObjectState->value])
                     ->defaultValue('location')
                 ->end()
             ->end();
@@ -117,13 +118,13 @@ final class Configuration implements ConfigurationInterface
                     ->info('Configure object_states used for scheduled visibility mechanism')
                     ->addDefaultsIfNotSet()
                     ->children()
+                        ->integerNode('object_state_group_id')
+                            ->defaultValue(0)
+                         ->end()
                         ->arrayNode('visible')
                             ->info('Configure visible object states and groups used for scheduled visibility mechanism')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->integerNode('object_state_group_id')
-                                    ->defaultValue(0)
-                                ->end()
                                 ->integerNode('object_state_id')
                                     ->defaultValue(0)
                                 ->end()
@@ -133,9 +134,6 @@ final class Configuration implements ConfigurationInterface
                             ->info('Configure hidden bject states and groups used for scheduled visibility mechanism')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->integerNode('object_state_group_id')
-                                    ->defaultValue(0)
-                                ->end()
                                 ->integerNode('object_state_id')
                                     ->defaultValue(0)
                                 ->end()
