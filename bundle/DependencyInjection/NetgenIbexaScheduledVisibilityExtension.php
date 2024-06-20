@@ -81,24 +81,32 @@ final class NetgenIbexaScheduledVisibilityExtension extends Extension
     private function processSectionsConfiguration(array $configuration, ContainerBuilder $container): void
     {
         $container->setParameter(
-            'netgen_ibexa_scheduled_visibility.sections.visible_section_id',
-            $configuration['sections']['visible_section_id'],
+            'netgen_ibexa_scheduled_visibility.sections.visible.section_id',
+            $configuration['sections']['visible']['section_id'],
         );
         $container->setParameter(
-            'netgen_ibexa_scheduled_visibility.sections.hidden_section_id',
-            $configuration['sections']['hidden_section_id'],
+            'netgen_ibexa_scheduled_visibility.sections.hidden.section_id',
+            $configuration['sections']['hidden']['section_id'],
         );
     }
 
     private function processObjectStatesConfiguration(array $configuration, ContainerBuilder $container): void
     {
         $container->setParameter(
-            'netgen_ibexa_scheduled_visibility.object_states.visible_object_state_id',
-            $configuration['object_states']['visible_object_state_id'],
+            'netgen_ibexa_scheduled_visibility.object_states.visible.object_state_group_id',
+            $configuration['object_states']['visible']['object_state_group_id'],
         );
         $container->setParameter(
-            'netgen_ibexa_scheduled_visibility.object_states.hidden_object_state_id',
-            $configuration['object_states']['hidden_object_state_id'],
+            'netgen_ibexa_scheduled_visibility.object_states.visible.object_state_id',
+            $configuration['object_states']['visible']['object_state_id'],
+        );
+        $container->setParameter(
+            'netgen_ibexa_scheduled_visibility.object_states.hidden.object_state_group_id',
+            $configuration['object_states']['hidden']['object_state_group_id'],
+        );
+        $container->setParameter(
+            'netgen_ibexa_scheduled_visibility.object_states.hidden.object_state_id',
+            $configuration['object_states']['hidden']['object_state_id'],
         );
     }
 }
