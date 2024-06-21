@@ -1,4 +1,5 @@
 services:
+
     Netgen\Bundle\IbexaScheduledVisibilityBundle\EventListener\ScheduledVisibilityListener:
         arguments:
             - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService'
@@ -47,4 +48,4 @@ services:
             - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService'
             - "@service_container"
         tags:
-            - { name: console.command, command: 'ngscheduledvisibility:content:toggleVisibility' }
+            - { name: console.command, command: 'ngscheduledvisibility:content:toggle-visibility' }
