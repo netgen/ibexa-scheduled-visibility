@@ -10,7 +10,6 @@ use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\Date\Value;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\StrategyType;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use function in_array;
 
@@ -18,12 +17,15 @@ final class ScheduledVisibilityService
 {
     public function __construct(
         private readonly iterable $strategies,
-        private readonly ContainerInterface $container,
+        private readonly string $strategy,
+        private readonly bool $enabled,
+        private readonly bool $allContentTypes,
+        private readonly array $allowedContentTypes,
     ) {}
 
     public function toggleVisibility(Content $content): void
     {
-        $strategyType = StrategyType::from($this->container->getParameter('netgen_ibexa_scheduled_visibility.strategy'));
+        $strategyType = StrategyType::from($this->strategy);
 
         /** @var ScheduledVisibilityInterface $strategy */
         foreach ($this->strategies as $strategy) {
@@ -44,13 +46,13 @@ final class ScheduledVisibilityService
 
     public function accept(Content $content): bool
     {
-        $enabled = $this->container->getParameter('netgen_ibexa_scheduled_visibility.enabled');
+        $enabled = $this->enabled;
         if (!$enabled) {
             return false;
         }
 
-        $allowedAll = $this->container->getParameter('netgen_ibexa_scheduled_visibility.content_types.all');
-        $allowedContentTypes = $this->container->getParameter('netgen_ibexa_scheduled_visibility.content_types.allowed');
+        $allowedAll = $this->allContentTypes;
+        $allowedContentTypes = $this->allowedContentTypes;
         $contentType = $content->getContentType();
         if (!$allowedAll && !in_array($contentType->identifier, $allowedContentTypes, true)) {
             return false;

@@ -13,7 +13,6 @@ use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\StrategyType;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use function sprintf;
 
@@ -22,7 +21,9 @@ final class ObjectState implements ScheduledVisibilityInterface
     public function __construct(
         private readonly Repository $repository,
         private readonly ObjectStateService $objectStateService,
-        private readonly ContainerInterface $container,
+        private readonly int $objectStateGroupId,
+        private readonly int $hiddenObjectStateId,
+        private readonly int $visibleObjectStateId,
         private readonly LoggerInterface $logger = new NullLogger(),
     ) {}
 
@@ -41,7 +42,7 @@ final class ObjectState implements ScheduledVisibilityInterface
             );
         }
 
-        $hiddenObjectStateId = $this->container->getParameter('netgen_ibexa_scheduled_visibility.object_states.hidden.object_state_id');
+        $hiddenObjectStateId = $this->hiddenObjectStateId;
 
         $this->toggleObjectState($content, $hiddenObjectStateId);
     }
@@ -61,7 +62,7 @@ final class ObjectState implements ScheduledVisibilityInterface
             );
         }
 
-        $visibleObjectStateId = $this->container->getParameter('netgen_ibexa_scheduled_visibility.object_states.visible.object_state_id');
+        $visibleObjectStateId = $this->visibleObjectStateId;
 
         $this->toggleObjectState($content, $visibleObjectStateId);
     }
@@ -76,7 +77,7 @@ final class ObjectState implements ScheduledVisibilityInterface
      */
     public function isHidden(Content $content): bool
     {
-        $objectStateGroupId = $this->container->getParameter('netgen_ibexa_scheduled_visibility.object_states.object_state_group_id');
+        $objectStateGroupId = $this->objectStateGroupId;
         $objectStateGroup = $this->repository->sudo(
             fn (): ObjectStateGroup => $this->objectStateService->loadObjectStateGroup($objectStateGroupId),
         );
@@ -85,7 +86,7 @@ final class ObjectState implements ScheduledVisibilityInterface
             fn (): \Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectState => $this->objectStateService->getContentState($content->contentInfo, $objectStateGroup),
         );
 
-        $hiddenObjectStateId = $this->container->getParameter('netgen_ibexa_scheduled_visibility.object_states.hidden.object_state_id');
+        $hiddenObjectStateId = $this->hiddenObjectStateId;
 
         return $hiddenObjectStateId === $objectState->id;
     }
@@ -108,7 +109,7 @@ final class ObjectState implements ScheduledVisibilityInterface
             return;
         }
 
-        $objectStateGroupId = $this->container->getParameter('netgen_ibexa_scheduled_visibility.object_states.object_state_group_id');
+        $objectStateGroupId = $this->objectStateGroupId;
 
         try {
             $objectStateGroup = $this->repository->sudo(

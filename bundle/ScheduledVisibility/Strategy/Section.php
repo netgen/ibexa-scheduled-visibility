@@ -12,7 +12,6 @@ use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\StrategyType;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use function sprintf;
 
@@ -21,7 +20,8 @@ final class Section implements ScheduledVisibilityInterface
     public function __construct(
         private readonly Repository $repository,
         private readonly SectionService $sectionService,
-        private readonly ContainerInterface $container,
+        private readonly int $hiddenSectionId,
+        private readonly int $visibleSectionId,
         private readonly LoggerInterface $logger = new NullLogger(),
     ) {}
 
@@ -31,7 +31,7 @@ final class Section implements ScheduledVisibilityInterface
             return;
         }
 
-        $hiddenSectionId = $this->container->getParameter('netgen_ibexa_scheduled_visibility.sections.hidden.section_id');
+        $hiddenSectionId = $this->hiddenSectionId;
 
         $this->toggleSection($content, $hiddenSectionId);
     }
@@ -42,7 +42,7 @@ final class Section implements ScheduledVisibilityInterface
             return;
         }
 
-        $visibleSectionId = $this->container->getParameter('netgen_ibexa_scheduled_visibility.sections.visible.section_id');
+        $visibleSectionId = $this->visibleSectionId;
 
         $this->toggleSection($content, $visibleSectionId);
     }
@@ -54,7 +54,7 @@ final class Section implements ScheduledVisibilityInterface
 
     public function isHidden(Content $content): bool
     {
-        $hiddenSectionId = $this->container->getParameter('netgen_ibexa_scheduled_visibility.sections.hidden.section_id');
+        $hiddenSectionId = $this->hiddenSectionId;
 
         return $content->getContentInfo()->getSectionId() === $hiddenSectionId;
     }

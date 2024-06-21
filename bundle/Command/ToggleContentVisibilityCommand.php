@@ -12,7 +12,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use function count;
 
@@ -23,7 +22,9 @@ final class ToggleContentVisibilityCommand extends Command
     public function __construct(
         private readonly Repository $repository,
         private readonly ScheduledVisibilityService $scheduledVisibilityService,
-        private readonly ContainerInterface $container,
+        private readonly bool $enabled,
+        private readonly bool $allContentTypes,
+        private readonly array $allowedContentTypes,
     ) {
         parent::__construct();
     }
@@ -46,8 +47,7 @@ final class ToggleContentVisibilityCommand extends Command
             'This command fetches content and toggles visibility based on its schedule from publish_from and publish_to fields.',
         );
 
-        $enabled = $this->container->getParameter('netgen_ibexa_scheduled_visibility.enabled');
-        if (!$enabled) {
+        if (!$this->enabled) {
             $this->style->warning('Scheduled visibility mechanism is disabled.');
 
             return Command::FAILURE;
@@ -62,10 +62,8 @@ final class ToggleContentVisibilityCommand extends Command
             ],
         );
 
-        $allowedAll = $this->container->getParameter('netgen_ibexa_scheduled_visibility.content_types.all');
-        if (!$allowedAll) {
-            $allowedContentTypes = $this->container->getParameter('netgen_ibexa_scheduled_visibility.content_types.allowed');
-            if (count($allowedContentTypes) === 0) {
+        if (!$this->allContentTypes) {
+            if (count($this->allowedContentTypes) === 0) {
                 $this->style->warning('No content types configured for scheduled visibility mechanism.');
 
                 return Command::FAILURE;
@@ -73,7 +71,7 @@ final class ToggleContentVisibilityCommand extends Command
             $criteria = new Criterion\LogicalAnd(
                 [
                     $criteria,
-                    new Criterion\ContentTypeIdentifier($allowedContentTypes),
+                    new Criterion\ContentTypeIdentifier($this->allowedContentTypes),
                 ],
             );
         }
