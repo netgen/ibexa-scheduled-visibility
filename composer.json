@@ -26,7 +26,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Netgen\\IbexaScheduledVisibilityBundle\\Tests\\": "tests/bundle"
+      "Netgen\\IbexaScheduledVisibility\\Tests\\": "tests/bundle"
     }
   },
   "extra": {

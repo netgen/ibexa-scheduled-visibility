@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netgen\IbexaSearchExtraBundle\Tests\DependencyInjection;
+namespace Netgen\IbexaScheduledVisibility\Tests\DependencyInjection;
 
 use Exception;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
