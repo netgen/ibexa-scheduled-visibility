@@ -8,7 +8,7 @@ use DateTime;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\Date\Value;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\StrategyType;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
 
 use function in_array;
@@ -16,8 +16,8 @@ use function in_array;
 final class ScheduledVisibilityService
 {
     public function __construct(
-        private readonly iterable $strategies,
-        private readonly string $strategy,
+        private readonly iterable $handlers,
+        private readonly string $type,
         private readonly bool $enabled,
         private readonly bool $allContentTypes,
         private readonly array $allowedContentTypes,
@@ -25,18 +25,18 @@ final class ScheduledVisibilityService
 
     public function toggleVisibility(Content $content): void
     {
-        $strategyType = StrategyType::from($this->strategy);
+        $handlerType = HandlerType::from($this->type);
 
-        /** @var ScheduledVisibilityInterface $strategy */
-        foreach ($this->strategies as $strategy) {
-            if ($strategy->getType() === $strategyType) {
+        /** @var ScheduledVisibilityInterface $handler */
+        foreach ($this->handlers as $handler) {
+            if ($handler->getType() === $handlerType) {
                 if ($this->shouldHide($content)) {
-                    $strategy->hide($content);
+                    $handler->hide($content);
 
                     return;
                 }
                 if ($this->shouldReveal($content)) {
-                    $strategy->reveal($content);
+                    $handler->reveal($content);
                 }
 
                 return;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\DependencyInjection;
 
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\StrategyType;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -24,7 +24,7 @@ final class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->getRootNode();
 
         $this->addEnabled($rootNode);
-        $this->addStrategySection($rootNode);
+        $this->addTypeSection($rootNode);
         $this->addContentTypesSection($rootNode);
         $this->addSectionsSection($rootNode);
         $this->addObjectStatesSection($rootNode);
@@ -45,13 +45,13 @@ final class Configuration implements ConfigurationInterface
                 ->end();
     }
 
-    private function addStrategySection(ArrayNodeDefinition $nodeDefinition): void
+    private function addTypeSection(ArrayNodeDefinition $nodeDefinition): void
     {
         $nodeDefinition
             ->children()
-                ->enumNode('strategy')
-                    ->info('Configure strategy for scheduled visibility mechanism')
-                    ->values([StrategyType::Location->value, StrategyType::Section->value, StrategyType::ObjectState->value])
+                ->enumNode('type')
+                    ->info('Configure type for scheduled visibility mechanism')
+                    ->values([HandlerType::Location->value, HandlerType::Section->value, HandlerType::ObjectState->value])
                     ->defaultValue('location')
                 ->end()
             ->end();

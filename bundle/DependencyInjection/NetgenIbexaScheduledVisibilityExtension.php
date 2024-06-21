@@ -44,7 +44,7 @@ final class NetgenIbexaScheduledVisibilityExtension extends Extension
         $configuration = $this->processConfiguration($configuration, $configs);
 
         $this->processEnabledConfiguration($configuration, $container);
-        $this->processStrategyConfiguration($configuration, $container);
+        $this->processTypeConfiguration($configuration, $container);
         $this->processContentTypesConfiguration($configuration, $container);
         $this->processSectionsConfiguration($configuration, $container);
         $this->processObjectStatesConfiguration($configuration, $container);
@@ -58,11 +58,11 @@ final class NetgenIbexaScheduledVisibilityExtension extends Extension
         );
     }
 
-    private function processStrategyConfiguration(array $configuration, ContainerBuilder $container): void
+    private function processTypeConfiguration(array $configuration, ContainerBuilder $container): void
     {
         $container->setParameter(
-            'netgen_ibexa_scheduled_visibility.strategy',
-            $configuration['strategy'],
+            'netgen_ibexa_scheduled_visibility.type',
+            $configuration['type'],
         );
     }
 

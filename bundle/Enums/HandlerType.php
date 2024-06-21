@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums;
 
-enum StrategyType: string
+enum HandlerType: string
 {
     case Location = 'location';
 

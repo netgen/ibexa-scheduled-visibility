@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Strategy;
+namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler;
 
 use Ibexa\Contracts\Core\Repository\ContentService;
 use Ibexa\Contracts\Core\Repository\Exceptions\BadStateException;
 use Ibexa\Contracts\Core\Repository\LocationService;
 use Ibexa\Contracts\Core\Repository\Repository;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\StrategyType;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -143,8 +143,8 @@ final class Location implements ScheduledVisibilityInterface
         return true;
     }
 
-    public function getType(): StrategyType
+    public function getType(): HandlerType
     {
-        return StrategyType::Location;
+        return HandlerType::Location;
     }
 }

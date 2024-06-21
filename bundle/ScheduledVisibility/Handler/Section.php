@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Strategy;
+namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler;
 
 use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException;
 use Ibexa\Contracts\Core\Repository\Repository;
 use Ibexa\Contracts\Core\Repository\SectionService;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\StrategyType;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -47,9 +47,9 @@ final class Section implements ScheduledVisibilityInterface
         $this->toggleSection($content, $visibleSectionId);
     }
 
-    public function getType(): StrategyType
+    public function getType(): HandlerType
     {
-        return StrategyType::Section;
+        return HandlerType::Section;
     }
 
     public function isHidden(Content $content): bool

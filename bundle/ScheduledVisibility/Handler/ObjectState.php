@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Strategy;
+namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler;
 
 use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException;
 use Ibexa\Contracts\Core\Repository\ObjectStateService;
 use Ibexa\Contracts\Core\Repository\Repository;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectStateGroup;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\StrategyType;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -67,9 +67,9 @@ final class ObjectState implements ScheduledVisibilityInterface
         $this->toggleObjectState($content, $visibleObjectStateId);
     }
 
-    public function getType(): StrategyType
+    public function getType(): HandlerType
     {
-        return StrategyType::ObjectState;
+        return HandlerType::ObjectState;
     }
 
     /**

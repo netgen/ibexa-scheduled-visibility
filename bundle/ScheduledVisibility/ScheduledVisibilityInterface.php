@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility;
 
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\StrategyType;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
 
 interface ScheduledVisibilityInterface
 {
@@ -15,5 +15,5 @@ interface ScheduledVisibilityInterface
 
     public function isHidden(Content $content): bool;
 
-    public function getType(): StrategyType;
+    public function getType(): HandlerType;
 }

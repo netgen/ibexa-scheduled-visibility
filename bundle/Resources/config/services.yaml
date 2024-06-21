@@ -1,6 +1,6 @@
 parameters:
     netgen_ibexa_scheduled_visibility.enabled: false
-    netgen_ibexa_scheduled_visibility.strategy: 'location'
+    netgen_ibexa_scheduled_visibility.type: 'location'
     netgen_ibexa_scheduled_visibility.content_types.all: false
     netgen_ibexa_scheduled_visibility.content_types.allowed: []
     netgen_ibexa_scheduled_visibility.sections.hidden.section_id: 0
@@ -18,17 +18,17 @@ services:
 
     _instanceof:
         Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface:
-            tags: [ 'scheduled_visibility_strategy' ]
+            tags: [ 'netgen.ibexa_scheduled_visibility.handler' ]
 
     Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService:
         arguments:
-            - !tagged_iterator { tag: 'scheduled_visibility_strategy' }
-            - '%netgen_ibexa_scheduled_visibility.strategy%'
+            - !tagged_iterator { tag: 'netgen.ibexa_scheduled_visibility.handler' }
+            - '%netgen_ibexa_scheduled_visibility.type%'
             - '%netgen_ibexa_scheduled_visibility.enabled%'
             - '%netgen_ibexa_scheduled_visibility.content_types.all%'
             - '%netgen_ibexa_scheduled_visibility.content_types.allowed%'
 
-    Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Strategy\Location:
+    Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\Location:
         arguments:
             - '@ibexa.api.repository'
             - '@ibexa.api.service.content'
@@ -37,7 +37,7 @@ services:
         tags:
             - { name: monolog.logger, channel: ngscheduledvisibility }
 
-    Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Strategy\Section:
+    Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\Section:
         arguments:
             - '@ibexa.api.repository'
             - '@ibexa.api.service.section'
@@ -47,7 +47,7 @@ services:
         tags:
             - { name: monolog.logger, channel: ngscheduledvisibility }
 
-    Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Strategy\ObjectState:
+    Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\ObjectState:
         arguments:
             - '@ibexa.api.repository'
             - '@ibexa.api.service.object_state'
