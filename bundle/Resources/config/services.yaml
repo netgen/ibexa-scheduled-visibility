@@ -40,3 +40,11 @@ services:
             - '@?logger'
         tags:
             - { name: monolog.logger, channel: ngscheduledvisibility }
+
+    Netgen\Bundle\IbexaScheduledVisibilityBundle\Command\ToggleContentVisibilityCommand:
+        arguments:
+            - '@ibexa.api.repository'
+            - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService'
+            - "@service_container"
+        tags:
+            - { name: console.command, command: 'ngscheduledvisibility:content:toggleVisibility' }
