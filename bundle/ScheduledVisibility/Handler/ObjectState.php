@@ -8,6 +8,7 @@ use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException;
 use Ibexa\Contracts\Core\Repository\ObjectStateService;
 use Ibexa\Contracts\Core\Repository\Repository;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
+use Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectState as ObjectStateValue;
 use Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectStateGroup;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
@@ -83,7 +84,7 @@ final class ObjectState implements ScheduledVisibilityInterface
         );
 
         $objectState = $this->repository->sudo(
-            fn (): \Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectState => $this->objectStateService->getContentState($content->contentInfo, $objectStateGroup),
+            fn (): ObjectStateValue => $this->objectStateService->getContentState($content->contentInfo, $objectStateGroup),
         );
 
         return $this->hiddenObjectStateId === $objectState->id;
@@ -93,7 +94,7 @@ final class ObjectState implements ScheduledVisibilityInterface
     {
         try {
             $objectState = $this->repository->sudo(
-                fn (): \Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectState => $this->objectStateService->loadObjectState($objectStateId),
+                fn (): ObjectStateValue => $this->objectStateService->loadObjectState($objectStateId),
             );
         } catch (NotFoundException $e) {
             $this->logger->error(
