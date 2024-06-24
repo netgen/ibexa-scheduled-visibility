@@ -16,9 +16,10 @@ final class LocationTest extends BaseTest
         $scheduledVisibilityService = $this->getScheduledVisibilityService();
         $content = $this->createContent($configuration['publish_from'], $configuration['publish_to']);
         $handler = $this->getLocationHandler();
-        if ($scheduledVisibilityService->shouldHide($content)) {
+        if ($scheduledVisibilityService->shouldBeHidden($content) && !$handler->isHidden($content)) {
             $handler->hide($content);
-        } elseif ($scheduledVisibilityService->shouldReveal($content)) {
+        }
+        if ($scheduledVisibilityService->shouldBeVisible($content) && $handler->isHidden($content)) {
             $handler->reveal($content);
         }
         $content = $this->getRepository()->getContentService()->loadContent($content->contentInfo->getId());

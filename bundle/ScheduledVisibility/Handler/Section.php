@@ -22,10 +22,6 @@ final class Section implements ScheduledVisibilityInterface
 
     public function hide(Content $content): void
     {
-        if ($this->isHidden($content)) {
-            return;
-        }
-
         $hiddenSectionId = $this->hiddenSectionId;
 
         $this->assignSection($content, $hiddenSectionId);
@@ -33,10 +29,6 @@ final class Section implements ScheduledVisibilityInterface
 
     public function reveal(Content $content): void
     {
-        if (!$this->isHidden($content)) {
-            return;
-        }
-
         $visibleSectionId = $this->visibleSectionId;
 
         $this->assignSection($content, $visibleSectionId);

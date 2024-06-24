@@ -23,10 +23,6 @@ final class Location implements ScheduledVisibilityInterface
 
     public function hide(Content $content): void
     {
-        if ($this->isHidden($content)) {
-            return;
-        }
-
         if (method_exists($this->contentService, 'hideContent')) {
             $this->repository->sudo(
                 fn () => $this->contentService->hideContent($content->getContentInfo()),
@@ -48,10 +44,6 @@ final class Location implements ScheduledVisibilityInterface
 
     public function reveal(Content $content): void
     {
-        if (!$this->isHidden($content)) {
-            return;
-        }
-
         if (method_exists($this->contentService, 'revealContent')) {
             $this->repository->sudo(
                 fn () => $this->contentService->revealContent($content->getContentInfo()),

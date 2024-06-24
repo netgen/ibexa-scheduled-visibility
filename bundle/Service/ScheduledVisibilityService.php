@@ -41,12 +41,12 @@ final class ScheduledVisibilityService
         /** @var ScheduledVisibilityInterface $handler */
         foreach ($this->handlers as $handler) {
             if ($handler->getType() === $handlerType) {
-                if ($this->shouldHide($content)) {
+                if ($this->shouldBeHidden($content) && !$handler->isHidden($content)) {
                     $handler->hide($content);
 
                     return VisibilityAction::Hidden;
                 }
-                if ($this->shouldReveal($content)) {
+                if ($this->shouldBeVisible($content) && $handler->isHidden($content)) {
                     $handler->reveal($content);
 
                     return VisibilityAction::Revealed;
@@ -101,7 +101,7 @@ final class ScheduledVisibilityService
         return true;
     }
 
-    public function shouldHide(Content $content): bool
+    public function shouldBeHidden(Content $content): bool
     {
         $publishFromField = $content->getField('publish_from');
         $publishToField = $content->getField('publish_to');
@@ -118,7 +118,7 @@ final class ScheduledVisibilityService
         return false;
     }
 
-    public function shouldReveal(Content $content): bool
+    public function shouldBeVisible(Content $content): bool
     {
         $publishFromField = $content->getField('publish_from');
         $publishToField = $content->getField('publish_to');

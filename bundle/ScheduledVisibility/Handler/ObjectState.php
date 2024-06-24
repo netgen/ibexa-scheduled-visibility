@@ -28,10 +28,6 @@ final class ObjectState implements ScheduledVisibilityInterface
      */
     public function hide(Content $content): void
     {
-        if ($this->isHidden($content)) {
-            return;
-        }
-
         $hiddenObjectStateId = $this->hiddenObjectStateId;
 
         $this->setObjectState($content, $hiddenObjectStateId);
@@ -42,10 +38,6 @@ final class ObjectState implements ScheduledVisibilityInterface
      */
     public function reveal(Content $content): void
     {
-        if (!$this->isHidden($content)) {
-            return;
-        }
-
         $visibleObjectStateId = $this->visibleObjectStateId;
 
         $this->setObjectState($content, $visibleObjectStateId);

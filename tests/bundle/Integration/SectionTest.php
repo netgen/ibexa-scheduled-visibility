@@ -18,9 +18,10 @@ final class SectionTest extends BaseTest
         $hiddenSection = $this->createSection();
         $visibleSectionId = 1;
         $handler = $this->getSectionHandler($hiddenSection->id, $visibleSectionId);
-        if ($scheduledVisibilityService->shouldHide($content)) {
+        if ($scheduledVisibilityService->shouldBeHidden($content) && !$handler->isHidden($content)) {
             $handler->hide($content);
-        } elseif ($scheduledVisibilityService->shouldReveal($content)) {
+        }
+        if ($scheduledVisibilityService->shouldBeVisible($content) && $handler->isHidden($content)) {
             $handler->reveal($content);
         }
         $content = $this->getRepository()->getContentService()->loadContent($content->contentInfo->getId());

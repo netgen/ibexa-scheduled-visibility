@@ -19,9 +19,10 @@ final class ObjectStateTest extends BaseTest
         $visibleObjectStateId = 1;
         $objectStateGroupId = 2;
         $handler = $this->getObjectStateHandler($objectStateGroupId, $hiddenObjectState->id, $visibleObjectStateId);
-        if ($scheduledVisibilityService->shouldHide($content)) {
+        if ($scheduledVisibilityService->shouldBeHidden($content) && !$handler->isHidden($content)) {
             $handler->hide($content);
-        } elseif ($scheduledVisibilityService->shouldReveal($content)) {
+        }
+        if ($scheduledVisibilityService->shouldBeVisible($content) && $handler->isHidden($content)) {
             $handler->reveal($content);
         }
         $content = $this->getRepository()->getContentService()->loadContent($content->contentInfo->getId());
