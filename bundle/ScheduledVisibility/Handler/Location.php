@@ -5,17 +5,13 @@ declare(strict_types=1);
 namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler;
 
 use Ibexa\Contracts\Core\Repository\ContentService;
-use Ibexa\Contracts\Core\Repository\Exceptions\BadStateException;
 use Ibexa\Contracts\Core\Repository\LocationService;
 use Ibexa\Contracts\Core\Repository\Repository;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 
 use function method_exists;
-use function sprintf;
 
 final class Location implements ScheduledVisibilityInterface
 {
@@ -23,24 +19,11 @@ final class Location implements ScheduledVisibilityInterface
         private readonly Repository $repository,
         private readonly ContentService $contentService,
         private readonly LocationService $locationService,
-        private readonly LoggerInterface $logger = new NullLogger(),
     ) {}
 
     public function hide(Content $content): void
     {
-        try {
-            if ($this->isHidden($content)) {
-                return;
-            }
-        } catch (BadStateException $e) {
-            $this->logger->error(
-                sprintf(
-                    'Content with id #%d is in the wrong state: %s',
-                    $content->getId(),
-                    $e->getMessage(),
-                ),
-            );
-
+        if ($this->isHidden($content)) {
             return;
         }
 
@@ -52,21 +35,9 @@ final class Location implements ScheduledVisibilityInterface
             return;
         }
 
-        try {
-            $locations = $this->repository->sudo(
-                fn () => $this->locationService->loadLocations($content->getContentInfo()),
-            );
-        } catch (BadStateException $e) {
-            $this->logger->error(
-                sprintf(
-                    'Content with id #%d is in the wrong state: %s',
-                    $content->getId(),
-                    $e->getMessage(),
-                ),
-            );
-
-            return;
-        }
+        $locations = $this->repository->sudo(
+            fn () => $this->locationService->loadLocations($content->getContentInfo()),
+        );
 
         foreach ($locations as $location) {
             $this->repository->sudo(
@@ -77,19 +48,7 @@ final class Location implements ScheduledVisibilityInterface
 
     public function reveal(Content $content): void
     {
-        try {
-            if (!$this->isHidden($content)) {
-                return;
-            }
-        } catch (BadStateException $e) {
-            $this->logger->error(
-                sprintf(
-                    'Content with id #%d is in the wrong state: %s',
-                    $content->getId(),
-                    $e->getMessage(),
-                ),
-            );
-
+        if (!$this->isHidden($content)) {
             return;
         }
 
@@ -101,21 +60,9 @@ final class Location implements ScheduledVisibilityInterface
             return;
         }
 
-        try {
-            $locations = $this->repository->sudo(
-                fn () => $this->locationService->loadLocations($content->getContentInfo()),
-            );
-        } catch (BadStateException $e) {
-            $this->logger->error(
-                sprintf(
-                    'Content with id #%d is in the wrong state: %s',
-                    $content->getId(),
-                    $e->getMessage(),
-                ),
-            );
-
-            return;
-        }
+        $locations = $this->repository->sudo(
+            fn () => $this->locationService->loadLocations($content->getContentInfo()),
+        );
 
         foreach ($locations as $location) {
             $this->repository->sudo(
@@ -124,9 +71,6 @@ final class Location implements ScheduledVisibilityInterface
         }
     }
 
-    /**
-     * @throws BadStateException
-     */
     public function isHidden(Content $content): bool
     {
         $contentInfo = $content->getContentInfo();

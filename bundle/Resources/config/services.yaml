@@ -34,9 +34,6 @@ services:
             - '@ibexa.api.repository'
             - '@ibexa.api.service.content'
             - '@ibexa.api.service.location'
-            - '@?logger'
-        tags:
-            - { name: monolog.logger, channel: ngscheduledvisibility }
 
     Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\Section:
         arguments:
