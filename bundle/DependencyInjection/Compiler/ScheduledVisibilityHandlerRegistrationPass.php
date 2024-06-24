@@ -28,11 +28,11 @@ final class ScheduledVisibilityHandlerRegistrationPass implements CompilerPassIn
         $handlers = $container->findTaggedServiceIds($this->handlerTag);
 
         foreach ($handlers as $id => $attributes) {
-            $this->registerResolver($handlerRegistryDefinition, $id, $attributes);
+            $this->registerHandler($handlerRegistryDefinition, $id, $attributes);
         }
     }
 
-    private function registerResolver(Definition $handlerRegistryDefinition, string $id, array $attributes): void
+    private function registerHandler(Definition $handlerRegistryDefinition, string $id, array $attributes): void
     {
         foreach ($attributes as $attribute) {
             if (!isset($attribute['identifier'])) {
