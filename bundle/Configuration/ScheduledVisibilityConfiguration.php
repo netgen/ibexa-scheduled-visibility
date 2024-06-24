@@ -9,7 +9,7 @@ use function in_array;
 final class ScheduledVisibilityConfiguration
 {
     public function __construct(
-        private readonly string $type,
+        private readonly string $handler,
         private readonly bool $enabled,
         private readonly bool $allContentTypes,
         private readonly array $allowedContentTypes,
@@ -30,9 +30,9 @@ final class ScheduledVisibilityConfiguration
         return $this->allowedContentTypes;
     }
 
-    public function getType(): string
+    public function getHandler(): string
     {
-        return $this->type;
+        return $this->handler;
     }
 
     public function isContentTypeAllowed(string $contentType): bool

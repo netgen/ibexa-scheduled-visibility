@@ -1,6 +1,6 @@
 parameters:
     netgen_ibexa_scheduled_visibility.enabled: false
-    netgen_ibexa_scheduled_visibility.type: 'location'
+    netgen_ibexa_scheduled_visibility.handler: 'content'
     netgen_ibexa_scheduled_visibility.content_types.all: false
     netgen_ibexa_scheduled_visibility.content_types.allowed: []
     netgen_ibexa_scheduled_visibility.sections.hidden.section_id: 0
@@ -21,7 +21,7 @@ services:
 
     Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibilityConfiguration:
         arguments:
-            - '%netgen_ibexa_scheduled_visibility.type%'
+            - '%netgen_ibexa_scheduled_visibility.handler%'
             - '%netgen_ibexa_scheduled_visibility.enabled%'
             - '%netgen_ibexa_scheduled_visibility.content_types.all%'
             - '%netgen_ibexa_scheduled_visibility.content_types.allowed%'

@@ -23,7 +23,7 @@ final class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->getRootNode();
 
         $this->addEnabled($rootNode);
-        $this->addTypeSection($rootNode);
+        $this->addHandlerSection($rootNode);
         $this->addContentTypesSection($rootNode);
         $this->addSectionsSection($rootNode);
         $this->addObjectStatesSection($rootNode);
@@ -44,13 +44,13 @@ final class Configuration implements ConfigurationInterface
                 ->end();
     }
 
-    private function addTypeSection(ArrayNodeDefinition $nodeDefinition): void
+    private function addHandlerSection(ArrayNodeDefinition $nodeDefinition): void
     {
         $nodeDefinition
             ->children()
-                ->scalarNode('type')
-                    ->info('Configure type for scheduled visibility mechanism')
-                    ->defaultValue('location')
+                ->scalarNode('handler')
+                    ->info('Configure handler for scheduled visibility mechanism')
+                    ->defaultValue('content')
                 ->end()
             ->end();
     }

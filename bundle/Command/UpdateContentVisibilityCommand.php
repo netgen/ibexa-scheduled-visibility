@@ -117,7 +117,7 @@ final class UpdateContentVisibilityCommand extends Command
                 $content = $hit->valueObject;
                 $action = $this->scheduledVisibilityService->updateVisibilityIfNeeded(
                     $content,
-                    $this->configurationService->getType(),
+                    $this->configurationService->getHandler(),
                 );
                 if ($action !== VisibilityUpdateResult::NoChange) {
                     $this->logger->info(

@@ -34,13 +34,13 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
             [
                 [
                     'enabled' => false,
-                    'type' => 'location',
+                    'handler' => 'content',
                 ],
             ],
             [
                 [
                     'enabled' => false,
-                    'type' => 'location',
+                    'handler' => 'content',
                     'sections' => [
                         'visible' => [
                             'section_id' => 0,
@@ -54,7 +54,7 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
             [
                 [
                     'enabled' => false,
-                    'type' => 'location',
+                    'handler' => 'content',
                     'sections' => [
                         'visible' => [
                             'section_id' => 0,
@@ -77,7 +77,7 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
             [
                 [
                     'enabled' => false,
-                    'type' => 'location',
+                    'handler' => 'content',
                     'sections' => [
                         'visible' => [
                             'section_id' => 0,
@@ -126,24 +126,36 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
         ];
     }
 
-    public function provideTypeConfigurationCases(): iterable
+    public function provideHandlerConfigurationCases(): iterable
     {
         return [
             [
                 [
-                    'type' => 'location',
+                    'handler' => 'content',
+                ],
+                'content',
+            ],
+            [
+                [
+                    'handler' => 'location',
                 ],
                 'location',
             ],
             [
                 [
-                    'type' => 'section',
+                    'handler' => 'content_location',
+                ],
+                'content_location',
+            ],
+            [
+                [
+                    'handler' => 'section',
                 ],
                 'section',
             ],
             [
                 [
-                    'type' => 'object_state',
+                    'handler' => 'object_state',
                 ],
                 'object_state',
             ],
@@ -281,8 +293,8 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
             false,
         );
         $this->assertContainerBuilderHasParameter(
-            'netgen_ibexa_scheduled_visibility.type',
-            'location',
+            'netgen_ibexa_scheduled_visibility.handler',
+            'content',
         );
         $this->assertContainerBuilderHasParameter(
             'netgen_ibexa_scheduled_visibility.sections.visible.section_id',
@@ -328,14 +340,14 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
     }
 
     /**
-     * @dataProvider provideTypeConfigurationCases
+     * @dataProvider provideHandlerConfigurationCases
      */
-    public function testTypeConfiguration(array $configuration, string $expectedParameterValue): void
+    public function testHandlerConfiguration(array $configuration, string $expectedParameterValue): void
     {
         $this->load($configuration);
 
         $this->assertContainerBuilderHasParameter(
-            'netgen_ibexa_scheduled_visibility.type',
+            'netgen_ibexa_scheduled_visibility.handler',
             $expectedParameterValue,
         );
     }
