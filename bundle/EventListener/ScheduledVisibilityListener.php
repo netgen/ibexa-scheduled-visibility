@@ -24,8 +24,6 @@ final class ScheduledVisibilityListener implements EventSubscriberInterface
     public function onPublishVersion(PublishVersionEvent $event): void
     {
         $content = $event->getContent();
-        if ($this->scheduledVisibilityService->accept($content)) {
-            $this->scheduledVisibilityService->toggleVisibility($content);
-        }
+        $this->scheduledVisibilityService->toggleVisibility($content);
     }
 }

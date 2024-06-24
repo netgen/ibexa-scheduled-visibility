@@ -26,6 +26,10 @@ final class ScheduledVisibilityService
 
     public function toggleVisibility(Content $content): void
     {
+        if (!$this->accept($content)) {
+            return;
+        }
+
         $handlerType = HandlerType::from($this->type);
 
         /** @var ScheduledVisibilityInterface $handler */
