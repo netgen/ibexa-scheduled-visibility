@@ -12,7 +12,6 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-use function in_array;
 use function sprintf;
 
 final class ScheduledVisibilityListener implements EventSubscriberInterface
@@ -38,11 +37,7 @@ final class ScheduledVisibilityListener implements EventSubscriberInterface
             return;
         }
 
-        $allowedAll = $this->configurationService->isAllContentTypes();
-        $allowedContentTypes = $this->configurationService->getAllowedContentTypes();
-
-        $contentType = $content->getContentType();
-        if (!$allowedAll && !in_array($contentType, $allowedContentTypes, true)) {
+        if (!$this->configurationService->isContentTypeAllowed($content->getContentType()->identifier)) {
             return;
         }
 
