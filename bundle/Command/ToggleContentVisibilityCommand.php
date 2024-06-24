@@ -77,12 +77,13 @@ final class ToggleContentVisibilityCommand extends Command
             ],
         );
 
-        if (!$this->allContentTypes) {
-            if (count($this->allowedContentTypes) === 0) {
-                $this->style->warning('No content types configured for scheduled visibility mechanism.');
+        if (!$this->allContentTypes && count($this->allowedContentTypes) === 0) {
+            $this->style->warning('No content types configured for scheduled visibility mechanism.');
 
-                return Command::FAILURE;
-            }
+            return Command::FAILURE;
+        }
+
+        if (!$this->allContentTypes && count($this->allowedContentTypes) > 0) {
             $criteria = new Criterion\LogicalAnd(
                 [
                     $criteria,
