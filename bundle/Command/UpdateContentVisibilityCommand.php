@@ -68,8 +68,6 @@ final class UpdateContentVisibilityCommand extends Command
         }
 
         $query = new Query();
-        $limit = $input->getOption('limit');
-        $query->limit = is_numeric($limit) ? (int) $limit : 50;
         $criteria = new Criterion\LogicalOr(
             [
                 new Criterion\IsFieldEmpty('publish_from', false),
@@ -92,14 +90,26 @@ final class UpdateContentVisibilityCommand extends Command
             );
         }
         $query->filter = $criteria;
+        $query->limit = 0;
 
         $searchService = $this->repository->getSearchService();
         $searchResult = $searchService->findContent($query, [], false);
+        $totalCount = $searchResult->totalCount;
+        if ($totalCount === 0) {
+            $output->writeln('No content found.');
+
+            return Command::FAILURE;
+        }
+
+        $limit = $input->getOption('limit');
+        $query->limit = is_numeric($limit) ? (int) $limit : 50;
+
+        $searchResult = $searchService->findContent($query, [], false);
         $searchHitCount = count($searchResult->searchHits);
 
+        $this->style->createProgressBar();
+        $this->style->progressStart();
         while ($searchHitCount > 0) {
-            $this->style->createProgressBar();
-            $this->style->progressStart();
             foreach ($searchResult->searchHits as $hit) {
                 /** @var \Ibexa\Contracts\Core\Repository\Values\Content\Content $content */
                 $content = $hit->valueObject;
@@ -115,12 +125,11 @@ final class UpdateContentVisibilityCommand extends Command
                 }
                 $this->style->progressAdvance();
             }
-            $this->style->progressFinish();
-
             $query->offset += $query->limit;
             $searchResult = $searchService->findContent($query, [], false);
             $searchHitCount = count($searchResult->searchHits);
         }
+        $this->style->progressFinish();
 
         $this->style->info('Done.');
 
