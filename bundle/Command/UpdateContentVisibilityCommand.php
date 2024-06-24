@@ -21,7 +21,7 @@ use function count;
 use function is_numeric;
 use function sprintf;
 
-final class ToggleContentVisibilityCommand extends Command
+final class UpdateContentVisibilityCommand extends Command
 {
     private SymfonyStyle $style;
 
@@ -39,7 +39,7 @@ final class ToggleContentVisibilityCommand extends Command
     protected function configure(): void
     {
         $this->setDescription(
-            'Toggles content visibility based on publish_from and publish_to attributes and configuration.',
+            'Updates content visibility based on publish_from and publish_to attributes and configuration.',
         );
         $this->addOption(
             'limit',
@@ -58,7 +58,7 @@ final class ToggleContentVisibilityCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->style->info(
-            'This command fetches content and toggles visibility based on its schedule from publish_from and publish_to fields.',
+            'This command fetches content and updates visibility based on its schedule from publish_from and publish_to fields.',
         );
 
         if (!$this->enabled) {
@@ -103,7 +103,7 @@ final class ToggleContentVisibilityCommand extends Command
             foreach ($searchResult->searchHits as $hit) {
                 /** @var \Ibexa\Contracts\Core\Repository\Values\Content\Content $content */
                 $content = $hit->valueObject;
-                $action = $this->scheduledVisibilityService->toggleVisibility($content);
+                $action = $this->scheduledVisibilityService->updateVisibilityIfNeeded($content);
                 if ($action !== VisibilityAction::NoChange) {
                     $this->logger->info(
                         sprintf(

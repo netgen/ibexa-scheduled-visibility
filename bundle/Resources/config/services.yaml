@@ -51,7 +51,7 @@ services:
             - '%netgen_ibexa_scheduled_visibility.object_states.hidden.object_state_id%'
             - '%netgen_ibexa_scheduled_visibility.object_states.visible.object_state_id%'
 
-    Netgen\Bundle\IbexaScheduledVisibilityBundle\Command\ToggleContentVisibilityCommand:
+    Netgen\Bundle\IbexaScheduledVisibilityBundle\Command\UpdateContentVisibilityCommand:
         arguments:
             - '@ibexa.api.repository'
             - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService'
@@ -60,5 +60,5 @@ services:
             - '%netgen_ibexa_scheduled_visibility.content_types.allowed%'
             - '@?logger'
         tags:
-            - { name: console.command, command: 'ngscheduledvisibility:content:toggle-visibility' }
+            - { name: console.command, command: 'ngscheduledvisibility:content:update-visibility' }
             - { name: monolog.logger, channel: ngscheduledvisibility }

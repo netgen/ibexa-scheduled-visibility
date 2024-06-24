@@ -32,6 +32,6 @@ content will not be accepted by the mechanism.
 Command
 -------
 
-Bundle contains ``ToggleContentVisibilityCommand`` that searches through configured content and, if necessary, toggles its visibility.
-It can be executed by: ``bin/console ngscheduledvisibility:content:toggle-visibility``.
+Bundle contains ``UpdateContentVisibilityCommand`` that searches through configured content and, if necessary, updates its visibility.
+It can be executed by: ``bin/console ngscheduledvisibility:content:update-visibility``.
 For this mechanism to work how it is intended, this command should be set as cron job.

@@ -30,7 +30,7 @@ final class ScheduledVisibilityService
     /**
      * @throws OutOfBoundsException
      */
-    public function toggleVisibility(Content $content): VisibilityAction
+    public function updateVisibilityIfNeeded(Content $content): VisibilityAction
     {
         if (!$this->accept($content)) {
             return VisibilityAction::NoChange;

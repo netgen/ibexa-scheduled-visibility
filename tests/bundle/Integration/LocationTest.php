@@ -11,7 +11,7 @@ final class LocationTest extends BaseTest
     /**
      * @dataProvider provideCases
      */
-    public function testToggleVisibility(array $configuration, bool $expectedHidden)
+    public function testUpdateVisibility(array $configuration, bool $expectedHidden)
     {
         $scheduledVisibilityService = $this->getScheduledVisibilityService();
         $content = $this->createContent($configuration['publish_from'], $configuration['publish_to']);
