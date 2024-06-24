@@ -12,6 +12,9 @@ For content to be accepted by scheduled visibility mechanism,
 its content type must contain two fields that are either ``ezdate`` or ``ezdatetime``.
 Identifiers of these fields must be ``publish_from`` and ``published_to``.
 
+.. warning::
+ ``publish_from`` and ``published_to`` fields must not be translatable.
+
 ``publish_from``
 ~~~~~~~~~~~~~~~~~~~~
 It represents time from which content becomes visible.
