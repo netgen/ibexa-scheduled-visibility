@@ -15,5 +15,7 @@ interface ScheduledVisibilityInterface
 
     public function isHidden(Content $content): bool;
 
+    public function isVisible(Content $content): bool;
+
     public function getType(): HandlerType;
 }

@@ -30,7 +30,17 @@ services:
             - '%netgen_ibexa_scheduled_visibility.content_types.all%'
             - '%netgen_ibexa_scheduled_visibility.content_types.allowed%'
 
+    Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\Content:
+        arguments:
+            - '@ibexa.api.repository'
+            - '@ibexa.api.service.content'
+
     Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\Location:
+        arguments:
+            - '@ibexa.api.repository'
+            - '@ibexa.api.service.location'
+
+    Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\ContentAndLocation:
         arguments:
             - '@ibexa.api.repository'
             - '@ibexa.api.service.content'
