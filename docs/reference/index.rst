@@ -6,7 +6,7 @@ Reference
 
     installation
     configuration
-    visibility_toggling_methods
+    visibility_handling
     usage
 
 .. include:: /reference/map.rst.inc

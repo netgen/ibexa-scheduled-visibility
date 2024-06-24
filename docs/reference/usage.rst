@@ -25,9 +25,9 @@ When set to null, content does not have that limit.
 It represents time until content is visible.
 When set to null, content does not have that limit.
 
-When both fields are set to null, content is always visible.
+When both fields are set to null, no action will be taken.
 Naturally, if value of ``publish_from`` field is greater that value of ``publish_to``,
-content will not be accepted by the mechanism.
+content will not be accepted by the mechanism and no action will be taken.
 
 Command
 -------

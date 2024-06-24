@@ -12,7 +12,7 @@ Default configuration
 
     netgen_ibexa_scheduled_visibility:
         enabled: false
-        type: 'location'
+        handler: 'content'
         content_types:
             all: false
             allowed: []
@@ -38,16 +38,18 @@ In order to use Ibexa scheduled visibility, you have to enable it:
     netgen_ibexa_scheduled_visibility:
         enabled: true
 
-Changing visibility handling method:
+Changing visibility handlers:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In order to change visibility handling method(tu stavi link),
-you need to set it to either **'location'**, **'section'** or **'object_state'**:
+In order to change :doc:`visibility handler <visibility_handling>`,
+you need to set it to either one of supported ones;
+**'content'**, **'location'**, **'content_location'**, **'section'** or **'object_state'**
+or create your own handler:
 
 .. code-block:: yaml
 
     netgen_ibexa_scheduled_visibility:
-        type: 'section'
+        handler: 'section'
 
 Content type limitations
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -72,16 +74,16 @@ and enter content types to be included in scheduled visibility mechanism:
 
 .. _section_configuration:
 
-Section visibility handling method
+Section handler configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If 'section' has been chosen as preferred visibility handling method,
+If :ref:`'section'<section_handler>` has been chosen as preferred visibility handler,
 ids of sections used for visible and hidden content need to be configured:
 
 .. code-block:: yaml
 
     netgen_ibexa_scheduled_visibility:
-        type: 'section'
+        handler: 'section'
         sections:
             visible:
                 section_id: 1
@@ -90,17 +92,17 @@ ids of sections used for visible and hidden content need to be configured:
 
 .. _object_state_configuration:
 
-Object state visibility handling method
+Object state handler configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If 'object_state' has been chosen as preferred visibility handling method,
+If :ref:`'object_state'<object_state_handler>` has been chosen as preferred visibility handler,
 ids of object states used for visible and hidden content need to be configured,
 as well as object state group id in which both of these states are:
 
 .. code-block:: yaml
 
     netgen_ibexa_scheduled_visibility:
-        type: 'object_state'
+        handler: 'object_state'
         object_states:
             object_state_group_id: 1
             visible:
