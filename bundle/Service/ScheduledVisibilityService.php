@@ -9,18 +9,16 @@ use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\Date\Value as DateValue;
 use Ibexa\Core\FieldType\DateAndTime\Value as DateAndTimeValue;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityUpdateResult;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Registry;
 use OutOfBoundsException;
 
 use function in_array;
-use function sprintf;
 
 final class ScheduledVisibilityService
 {
     public function __construct(
-        private readonly iterable $handlers,
+        private readonly Registry $registry,
         private readonly string $type,
         private readonly bool $enabled,
         private readonly bool $allContentTypes,
@@ -36,29 +34,21 @@ final class ScheduledVisibilityService
             return VisibilityUpdateResult::NoChange;
         }
 
-        $handlerType = HandlerType::from($this->type);
+        $handler = $this->registry->get($this->type);
 
-        /** @var ScheduledVisibilityInterface $handler */
-        foreach ($this->handlers as $handler) {
-            if ($handler->getType() === $handlerType) {
-                if ($this->shouldBeHidden($content) && !$handler->isHidden($content)) {
-                    $handler->hide($content);
+        if ($this->shouldBeHidden($content) && !$handler->isHidden($content)) {
+            $handler->hide($content);
 
-                    return VisibilityUpdateResult::Hidden;
-                }
-                if ($this->shouldBeVisible($content) && $handler->isHidden($content)) {
-                    $handler->reveal($content);
-
-                    return VisibilityUpdateResult::Revealed;
-                }
-
-                return VisibilityUpdateResult::NoChange;
-            }
+            return VisibilityUpdateResult::Hidden;
         }
 
-        throw new OutOfBoundsException(
-            sprintf('Scheduled visibility handler %s could not be resolved', $this->type),
-        );
+        if ($this->shouldBeVisible($content) && $handler->isHidden($content)) {
+            $handler->reveal($content);
+
+            return VisibilityUpdateResult::Revealed;
+        }
+
+        return VisibilityUpdateResult::NoChange;
     }
 
     public function accept(Content $content): bool
