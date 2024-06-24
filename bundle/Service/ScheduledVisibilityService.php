@@ -12,8 +12,10 @@ use Ibexa\Core\FieldType\DateAndTime\Value as DateAndTimeValue;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityAction;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
+use OutOfBoundsException;
 
 use function in_array;
+use function sprintf;
 
 final class ScheduledVisibilityService
 {
@@ -25,6 +27,9 @@ final class ScheduledVisibilityService
         private readonly array $allowedContentTypes,
     ) {}
 
+    /**
+     * @throws OutOfBoundsException
+     */
     public function toggleVisibility(Content $content): VisibilityAction
     {
         if (!$this->accept($content)) {
@@ -51,7 +56,9 @@ final class ScheduledVisibilityService
             }
         }
 
-        return VisibilityAction::NoChange;
+        throw new OutOfBoundsException(
+            sprintf('Scheduled visibility handler %s could not be resolved', $this->type),
+        );
     }
 
     public function accept(Content $content): bool
