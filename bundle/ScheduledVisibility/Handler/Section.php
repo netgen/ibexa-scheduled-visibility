@@ -33,7 +33,7 @@ final class Section implements ScheduledVisibilityInterface
 
         $hiddenSectionId = $this->hiddenSectionId;
 
-        $this->toggleSection($content, $hiddenSectionId);
+        $this->assignSection($content, $hiddenSectionId);
     }
 
     public function reveal(Content $content): void
@@ -44,7 +44,7 @@ final class Section implements ScheduledVisibilityInterface
 
         $visibleSectionId = $this->visibleSectionId;
 
-        $this->toggleSection($content, $visibleSectionId);
+        $this->assignSection($content, $visibleSectionId);
     }
 
     public function getType(): HandlerType
@@ -57,7 +57,7 @@ final class Section implements ScheduledVisibilityInterface
         return $content->getContentInfo()->getSectionId() === $this->hiddenSectionId;
     }
 
-    private function toggleSection(Content $content, int $sectionId): void
+    private function assignSection(Content $content, int $sectionId): void
     {
         try {
             $section = $this->repository->sudo(

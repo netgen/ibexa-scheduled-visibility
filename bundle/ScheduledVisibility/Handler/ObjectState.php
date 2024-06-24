@@ -45,7 +45,7 @@ final class ObjectState implements ScheduledVisibilityInterface
 
         $hiddenObjectStateId = $this->hiddenObjectStateId;
 
-        $this->toggleObjectState($content, $hiddenObjectStateId);
+        $this->setObjectState($content, $hiddenObjectStateId);
     }
 
     public function reveal(Content $content): void
@@ -65,7 +65,7 @@ final class ObjectState implements ScheduledVisibilityInterface
 
         $visibleObjectStateId = $this->visibleObjectStateId;
 
-        $this->toggleObjectState($content, $visibleObjectStateId);
+        $this->setObjectState($content, $visibleObjectStateId);
     }
 
     public function getType(): HandlerType
@@ -90,7 +90,7 @@ final class ObjectState implements ScheduledVisibilityInterface
         return $this->hiddenObjectStateId === $objectState->id;
     }
 
-    private function toggleObjectState(Content $content, int $objectStateId): void
+    private function setObjectState(Content $content, int $objectStateId): void
     {
         try {
             /** @var ObjectStateValue $objectState */
