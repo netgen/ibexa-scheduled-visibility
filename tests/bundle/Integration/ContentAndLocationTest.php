@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaScheduledVisibility\Tests\Integration;
 
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\Location;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\ContentAndLocation;
 
-final class LocationTest extends BaseTest
+final class ContentAndLocationTest extends BaseTest
 {
     /**
      * @dataProvider provideCases
@@ -15,7 +15,7 @@ final class LocationTest extends BaseTest
     {
         $scheduledVisibilityService = $this->getScheduledVisibilityService();
         $content = $this->createContent($configuration['publish_from'], $configuration['publish_to']);
-        $handler = $this->getLocationHandler();
+        $handler = $this->getContentAndLocationHandler();
         if ($scheduledVisibilityService->shouldBeHidden($content) && !$handler->isHidden($content)) {
             $handler->hide($content);
         }
@@ -26,10 +26,10 @@ final class LocationTest extends BaseTest
         self::assertEquals($handler->isHidden($content), $expectedHidden);
     }
 
-    private function getLocationHandler(): Location
+    private function getContentAndLocationHandler(): ContentAndLocation
     {
         $repository = $this->getRepository();
 
-        return new Location($repository, $repository->getLocationService());
+        return new ContentAndLocation($repository, $repository->getContentService(), $repository->getLocationService());
     }
 }

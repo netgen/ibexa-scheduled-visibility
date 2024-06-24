@@ -49,9 +49,8 @@ final class Configuration implements ConfigurationInterface
     {
         $nodeDefinition
             ->children()
-                ->enumNode('type')
+                ->scalarNode('type')
                     ->info('Configure type for scheduled visibility mechanism')
-                    ->values([HandlerType::Location->value, HandlerType::Section->value, HandlerType::ObjectState->value])
                     ->defaultValue('location')
                 ->end()
             ->end();

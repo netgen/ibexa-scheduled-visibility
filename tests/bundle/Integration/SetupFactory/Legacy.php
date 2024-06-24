@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Netgen\IbexaScheduledVisibility\Tests\Integration\SetupFactory;
 
 use Ibexa\Contracts\Core\Test\Repository\SetupFactory\Legacy as CoreLegacySetupFactory;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\DependencyInjection\Compiler\ScheduledVisibilityHandlerRegistrationPass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -19,5 +20,6 @@ final class Legacy extends CoreLegacySetupFactory
         );
 
         $loader->load('services.yaml');
+        $containerBuilder->addCompilerPass(new ScheduledVisibilityHandlerRegistrationPass());
     }
 }
