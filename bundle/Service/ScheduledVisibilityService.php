@@ -68,7 +68,10 @@ final class ScheduledVisibilityService
             return false;
         }
 
+        /** @var Field $publishFromField */
         $publishFromField = $content->getField('publish_from');
+
+        /** @var Field $publishToField */
         $publishToField = $content->getField('publish_to');
         if (
             ($publishFromField->fieldTypeIdentifier !== 'ezdatetime' && $publishFromField->fieldTypeIdentifier !== 'ezdate')
