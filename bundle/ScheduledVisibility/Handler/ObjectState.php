@@ -12,10 +12,6 @@ use Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectState as ObjectStat
 use Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectStateGroup;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
-
-use function sprintf;
 
 final class ObjectState implements ScheduledVisibilityInterface
 {
@@ -25,22 +21,15 @@ final class ObjectState implements ScheduledVisibilityInterface
         private readonly int $objectStateGroupId,
         private readonly int $hiddenObjectStateId,
         private readonly int $visibleObjectStateId,
-        private readonly LoggerInterface $logger = new NullLogger(),
     ) {}
 
+    /**
+     * @throws NotFoundException
+     */
     public function hide(Content $content): void
     {
-        try {
-            if ($this->isHidden($content)) {
-                return;
-            }
-        } catch (NotFoundException $e) {
-            $this->logger->error(
-                sprintf(
-                    'Configured object state group does not exist: %s',
-                    $e->getMessage(),
-                ),
-            );
+        if ($this->isHidden($content)) {
+            return;
         }
 
         $hiddenObjectStateId = $this->hiddenObjectStateId;
@@ -48,19 +37,13 @@ final class ObjectState implements ScheduledVisibilityInterface
         $this->setObjectState($content, $hiddenObjectStateId);
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function reveal(Content $content): void
     {
-        try {
-            if (!$this->isHidden($content)) {
-                return;
-            }
-        } catch (NotFoundException $e) {
-            $this->logger->error(
-                sprintf(
-                    'Configured object state group does not exist: %s',
-                    $e->getMessage(),
-                ),
-            );
+        if (!$this->isHidden($content)) {
+            return;
         }
 
         $visibleObjectStateId = $this->visibleObjectStateId;
@@ -90,24 +73,15 @@ final class ObjectState implements ScheduledVisibilityInterface
         return $this->hiddenObjectStateId === $objectState->id;
     }
 
+    /**
+     * @throws NotFoundException
+     */
     private function setObjectState(Content $content, int $objectStateId): void
     {
-        try {
-            /** @var ObjectStateValue $objectState */
-            $objectState = $this->repository->sudo(
-                fn (): ObjectStateValue => $this->objectStateService->loadObjectState($objectStateId),
-            );
-        } catch (NotFoundException $e) {
-            $this->logger->error(
-                sprintf(
-                    'Configured object state with id #%d does not exist: %s',
-                    $objectStateId,
-                    $e->getMessage(),
-                ),
-            );
-
-            return;
-        }
+        /** @var ObjectStateValue $objectState */
+        $objectState = $this->repository->sudo(
+            fn (): ObjectStateValue => $this->objectStateService->loadObjectState($objectStateId),
+        );
 
         $objectStateGroup = $objectState->getObjectStateGroup();
 

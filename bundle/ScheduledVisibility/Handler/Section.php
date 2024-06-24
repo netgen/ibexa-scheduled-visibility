@@ -10,10 +10,6 @@ use Ibexa\Contracts\Core\Repository\SectionService;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
-
-use function sprintf;
 
 final class Section implements ScheduledVisibilityInterface
 {
@@ -22,7 +18,6 @@ final class Section implements ScheduledVisibilityInterface
         private readonly SectionService $sectionService,
         private readonly int $hiddenSectionId,
         private readonly int $visibleSectionId,
-        private readonly LoggerInterface $logger = new NullLogger(),
     ) {}
 
     public function hide(Content $content): void
@@ -57,25 +52,16 @@ final class Section implements ScheduledVisibilityInterface
         return $content->getContentInfo()->getSectionId() === $this->hiddenSectionId;
     }
 
+    /**
+     * @throws NotFoundException
+     */
     private function assignSection(Content $content, int $sectionId): void
     {
-        try {
-            $section = $this->repository->sudo(
-                fn (): \Ibexa\Contracts\Core\Repository\Values\Content\Section => $this->sectionService->loadSection($sectionId),
-            );
-            $this->repository->sudo(
-                fn () => $this->sectionService->assignSection($content->getContentInfo(), $section),
-            );
-        } catch (NotFoundException $e) {
-            $this->logger->error(
-                sprintf(
-                    'Section with id #%d was not found: %s',
-                    $sectionId,
-                    $e->getMessage(),
-                ),
-            );
-
-            return;
-        }
+        $section = $this->repository->sudo(
+            fn (): \Ibexa\Contracts\Core\Repository\Values\Content\Section => $this->sectionService->loadSection($sectionId),
+        );
+        $this->repository->sudo(
+            fn () => $this->sectionService->assignSection($content->getContentInfo(), $section),
+        );
     }
 }
