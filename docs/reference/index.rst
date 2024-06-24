@@ -4,9 +4,9 @@ Reference
 .. toctree::
     :hidden:
 
-    installation_instructions
-    configuration_instructions
-    visibility_strategies
-
+    installation
+    configuration
+    visibility_toggling_methods
+    usage
 
 .. include:: /reference/map.rst.inc
