@@ -8,7 +8,6 @@ use Ibexa\Contracts\Core\Repository\ContentService;
 use Ibexa\Contracts\Core\Repository\LocationService;
 use Ibexa\Contracts\Core\Repository\Repository;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
 
 final class ContentAndLocation implements ScheduledVisibilityInterface
@@ -72,10 +71,5 @@ final class ContentAndLocation implements ScheduledVisibilityInterface
         }
 
         return true;
-    }
-
-    public function getType(): HandlerType
-    {
-        return HandlerType::ContentAndLocation;
     }
 }

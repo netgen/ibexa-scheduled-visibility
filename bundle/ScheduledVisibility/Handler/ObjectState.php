@@ -10,7 +10,6 @@ use Ibexa\Contracts\Core\Repository\Repository;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectState as ObjectStateValue;
 use Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectStateGroup;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
 
 final class ObjectState implements ScheduledVisibilityInterface
@@ -41,11 +40,6 @@ final class ObjectState implements ScheduledVisibilityInterface
         $visibleObjectStateId = $this->visibleObjectStateId;
 
         $this->setObjectState($content, $visibleObjectStateId);
-    }
-
-    public function getType(): HandlerType
-    {
-        return HandlerType::ObjectState;
     }
 
     /**

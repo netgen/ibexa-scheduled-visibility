@@ -8,7 +8,6 @@ use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException;
 use Ibexa\Contracts\Core\Repository\Repository;
 use Ibexa\Contracts\Core\Repository\SectionService;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
 
 final class Section implements ScheduledVisibilityInterface
@@ -32,11 +31,6 @@ final class Section implements ScheduledVisibilityInterface
         $visibleSectionId = $this->visibleSectionId;
 
         $this->assignSection($content, $visibleSectionId);
-    }
-
-    public function getType(): HandlerType
-    {
-        return HandlerType::Section;
     }
 
     public function isHidden(Content $content): bool
