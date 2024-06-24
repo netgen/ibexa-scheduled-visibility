@@ -44,6 +44,11 @@ final class Section implements ScheduledVisibilityInterface
         return $content->getContentInfo()->getSectionId() === $this->hiddenSectionId;
     }
 
+    public function isVisible(Content $content): bool
+    {
+        return $content->getContentInfo()->getSectionId() === $this->visibleSectionId;
+    }
+
     /**
      * @throws NotFoundException
      */
