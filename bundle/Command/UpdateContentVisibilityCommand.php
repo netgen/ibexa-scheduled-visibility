@@ -107,7 +107,7 @@ final class UpdateContentVisibilityCommand extends Command
         $searchResult = $searchService->findContent($query, [], false);
         $searchHitCount = count($searchResult->searchHits);
 
-        $this->style->createProgressBar();
+        $this->style->createProgressBar($totalCount);
         $this->style->progressStart();
         while ($searchHitCount > 0) {
             foreach ($searchResult->searchHits as $hit) {
