@@ -7,13 +7,19 @@ namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Command;
 use Ibexa\Contracts\Core\Repository\Repository;
 use Ibexa\Contracts\Core\Repository\Values\Content\Query;
 use Ibexa\Contracts\Core\Repository\Values\Content\Query\Criterion;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityAction;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 use function count;
+use function is_numeric;
+use function sprintf;
 
 final class ToggleContentVisibilityCommand extends Command
 {
@@ -25,6 +31,7 @@ final class ToggleContentVisibilityCommand extends Command
         private readonly bool $enabled,
         private readonly bool $allContentTypes,
         private readonly array $allowedContentTypes,
+        private readonly LoggerInterface $logger = new NullLogger(),
     ) {
         parent::__construct();
     }
@@ -33,6 +40,13 @@ final class ToggleContentVisibilityCommand extends Command
     {
         $this->setDescription(
             'Toggles content visibility based on publish_from and publish_to attributes and configuration.',
+        );
+        $this->addOption(
+            'limit',
+            'l',
+            InputOption::VALUE_OPTIONAL,
+            'Number of content object to process in a single iteration',
+            50,
         );
     }
 
@@ -54,7 +68,8 @@ final class ToggleContentVisibilityCommand extends Command
         }
 
         $query = new Query();
-        $query->limit = 50;
+        $limit = $input->getOption('limit');
+        $query->limit = is_numeric($limit) ? (int) $limit : 50;
         $criteria = new Criterion\LogicalOr(
             [
                 new Criterion\IsFieldEmpty('publish_from', false),
@@ -87,8 +102,15 @@ final class ToggleContentVisibilityCommand extends Command
             foreach ($searchResult->searchHits as $hit) {
                 /** @var \Ibexa\Contracts\Core\Repository\Values\Content\Content $content */
                 $content = $hit->valueObject;
-                if ($this->scheduledVisibilityService->accept($content)) {
-                    $this->scheduledVisibilityService->toggleVisibility($content);
+                $action = $this->scheduledVisibilityService->toggleVisibility($content);
+                if ($action !== VisibilityAction::NoChange) {
+                    $this->logger->info(
+                        sprintf(
+                            'Content with id #%d has been %s.',
+                            $content->getId(),
+                            $action->value,
+                        ),
+                    );
                 }
                 $this->style->progressAdvance();
             }
