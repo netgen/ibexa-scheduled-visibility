@@ -46,7 +46,10 @@ final class ScheduledVisibilityListener implements EventSubscriberInterface
             return;
         }
 
-        $action = $this->scheduledVisibilityService->updateVisibilityIfNeeded($content);
+        $action = $this->scheduledVisibilityService->updateVisibilityIfNeeded(
+            $content,
+            $this->configurationService->getType(),
+        );
         if ($action !== VisibilityUpdateResult::NoChange) {
             $this->logger->info(
                 sprintf(

@@ -9,26 +9,26 @@ use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\Date\Value as DateValue;
 use Ibexa\Core\FieldType\DateAndTime\Value as DateAndTimeValue;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibilityConfiguration;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityUpdateResult;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Registry;
 use OutOfBoundsException;
 
 final class ScheduledVisibilityService
 {
     public function __construct(
-        private readonly ScheduledVisibilityConfiguration $configurationService,
+        private readonly Registry $registry,
     ) {}
 
     /**
      * @throws OutOfBoundsException
      */
-    public function updateVisibilityIfNeeded(Content $content): VisibilityUpdateResult
+    public function updateVisibilityIfNeeded(Content $content, ?string $handlerIdentifier = null): VisibilityUpdateResult
     {
         if (!$this->accept($content)) {
             return VisibilityUpdateResult::NoChange;
         }
 
-        $handler = $this->configurationService->getHandler();
+        $handler = $this->registry->get($handlerIdentifier);
 
         if ($this->shouldBeHidden($content) && !$handler->isHidden($content)) {
             $handler->hide($content);

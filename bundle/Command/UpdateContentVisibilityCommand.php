@@ -115,7 +115,10 @@ final class UpdateContentVisibilityCommand extends Command
             foreach ($searchResult->searchHits as $hit) {
                 /** @var \Ibexa\Contracts\Core\Repository\Values\Content\Content $content */
                 $content = $hit->valueObject;
-                $action = $this->scheduledVisibilityService->updateVisibilityIfNeeded($content);
+                $action = $this->scheduledVisibilityService->updateVisibilityIfNeeded(
+                    $content,
+                    $this->configurationService->getType(),
+                );
                 if ($action !== VisibilityUpdateResult::NoChange) {
                     $this->logger->info(
                         sprintf(
