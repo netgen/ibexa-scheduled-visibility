@@ -18,7 +18,7 @@ use function in_array;
 final class ScheduledVisibilityService
 {
     public function __construct(
-        private ScheduledVisibilityConfiguration $configurationService,
+        private readonly ScheduledVisibilityConfiguration $configurationService,
     ) {}
 
     /**
