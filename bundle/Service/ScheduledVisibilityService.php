@@ -13,8 +13,6 @@ use Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibili
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityUpdateResult;
 use OutOfBoundsException;
 
-use function in_array;
-
 final class ScheduledVisibilityService
 {
     public function __construct(
@@ -49,17 +47,7 @@ final class ScheduledVisibilityService
 
     public function accept(Content $content): bool
     {
-        if (!$this->configurationService->isEnabled()) {
-            return false;
-        }
-
-        $allowedAll = $this->configurationService->isAllContentTypes();
-        $allowedContentTypes = $this->configurationService->getAllowedContentTypes();
-
         $contentType = $content->getContentType();
-        if (!$allowedAll && !in_array($contentType->identifier, $allowedContentTypes, true)) {
-            return false;
-        }
 
         $fieldDefinitions = $contentType->getFieldDefinitions();
         if (!$fieldDefinitions->has('publish_from') || !$fieldDefinitions->has('publish_to')) {

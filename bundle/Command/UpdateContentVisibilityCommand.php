@@ -7,6 +7,7 @@ namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Command;
 use Ibexa\Contracts\Core\Repository\Repository;
 use Ibexa\Contracts\Core\Repository\Values\Content\Query;
 use Ibexa\Contracts\Core\Repository\Values\Content\Query\Criterion;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibilityConfiguration;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityUpdateResult;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService;
 use Psr\Log\LoggerInterface;
@@ -28,9 +29,7 @@ final class UpdateContentVisibilityCommand extends Command
     public function __construct(
         private readonly Repository $repository,
         private readonly ScheduledVisibilityService $scheduledVisibilityService,
-        private readonly bool $enabled,
-        private readonly bool $allContentTypes,
-        private readonly array $allowedContentTypes,
+        private readonly ScheduledVisibilityConfiguration $configurationService,
         private readonly LoggerInterface $logger = new NullLogger(),
     ) {
         parent::__construct();
@@ -61,7 +60,7 @@ final class UpdateContentVisibilityCommand extends Command
             'This command fetches content and updates visibility based on its schedule from publish_from and publish_to fields.',
         );
 
-        if (!$this->enabled) {
+        if (!$this->configurationService->isEnabled()) {
             $this->style->warning('Scheduled visibility mechanism is disabled.');
 
             return Command::FAILURE;
@@ -75,17 +74,20 @@ final class UpdateContentVisibilityCommand extends Command
             ],
         );
 
-        if (!$this->allContentTypes && count($this->allowedContentTypes) === 0) {
+        $allContentTypes = $this->configurationService->isAllContentTypes();
+        $allowedContentTypes = $this->configurationService->getAllowedContentTypes();
+
+        if (!$allContentTypes && count($allowedContentTypes) === 0) {
             $this->style->warning('No content types configured for scheduled visibility mechanism.');
 
             return Command::FAILURE;
         }
 
-        if (!$this->allContentTypes && count($this->allowedContentTypes) > 0) {
+        if (!$allContentTypes && count($allowedContentTypes) > 0) {
             $criteria = new Criterion\LogicalAnd(
                 [
                     $criteria,
-                    new Criterion\ContentTypeIdentifier($this->allowedContentTypes),
+                    new Criterion\ContentTypeIdentifier($allowedContentTypes),
                 ],
             );
         }

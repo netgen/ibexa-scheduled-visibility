@@ -13,6 +13,7 @@ services:
     Netgen\Bundle\IbexaScheduledVisibilityBundle\EventListener\ScheduledVisibilityListener:
         arguments:
             - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService'
+            - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibilityConfiguration'
             - '@?logger'
         tags:
             - { name: kernel.event_subscriber }
@@ -77,9 +78,7 @@ services:
         arguments:
             - '@ibexa.api.repository'
             - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService'
-            - '%netgen_ibexa_scheduled_visibility.enabled%'
-            - '%netgen_ibexa_scheduled_visibility.content_types.all%'
-            - '%netgen_ibexa_scheduled_visibility.content_types.allowed%'
+            - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibilityConfiguration'
             - '@?logger'
         tags:
             - { name: console.command, command: 'ngscheduledvisibility:content:update-visibility' }
