@@ -15,6 +15,7 @@ services:
             - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService'
         tags:
             - { name: kernel.event_subscriber }
+            - { name: monolog.logger, channel: ngscheduledvisibility }
 
     _instanceof:
         Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface:

@@ -10,6 +10,7 @@ use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\Date\Value as DateValue;
 use Ibexa\Core\FieldType\DateAndTime\Value as DateAndTimeValue;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityAction;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
 
 use function in_array;
@@ -24,10 +25,10 @@ final class ScheduledVisibilityService
         private readonly array $allowedContentTypes,
     ) {}
 
-    public function toggleVisibility(Content $content): void
+    public function toggleVisibility(Content $content): VisibilityAction
     {
         if (!$this->accept($content)) {
-            return;
+            return VisibilityAction::NoChange;
         }
 
         $handlerType = HandlerType::from($this->type);
@@ -38,15 +39,19 @@ final class ScheduledVisibilityService
                 if ($this->shouldHide($content)) {
                     $handler->hide($content);
 
-                    return;
+                    return VisibilityAction::Hidden;
                 }
                 if ($this->shouldReveal($content)) {
                     $handler->reveal($content);
+
+                    return VisibilityAction::Revealed;
                 }
 
-                return;
+                return VisibilityAction::NoChange;
             }
         }
+
+        return VisibilityAction::NoChange;
     }
 
     public function accept(Content $content): bool
