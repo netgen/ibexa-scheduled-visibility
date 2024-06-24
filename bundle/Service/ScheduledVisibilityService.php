@@ -7,7 +7,8 @@ namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Service;
 use DateTime;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
-use Ibexa\Core\FieldType\Date\Value;
+use Ibexa\Core\FieldType\Date\Value as DateValue;
+use Ibexa\Core\FieldType\DateAndTime\Value as DateAndTimeValue;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
 
@@ -123,10 +124,10 @@ final class ScheduledVisibilityService
 
     private function getDateTime(Field $field): null|DateTime
     {
-        if ($field->value instanceof Value) {
+        if ($field->value instanceof DateValue) {
             return $field->value->date;
         }
-        if ($field->value instanceof \Ibexa\Core\FieldType\DateAndTime\Value) {
+        if ($field->value instanceof DateAndTimeValue) {
             return $field->value->value;
         }
 
