@@ -6,7 +6,7 @@
          convertWarningsToExceptions="true">
     <testsuites>
         <testsuite name="Dependency injection unit tests">
-            <directory suffix="Test.php">./tests/bundle/</directory>
+            <directory suffix="Test.php">./tests/bundle/DependencyInjection</directory>
         </testsuite>
     </testsuites>
 </phpunit>
