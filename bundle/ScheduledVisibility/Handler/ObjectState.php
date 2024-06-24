@@ -80,7 +80,7 @@ final class ObjectState implements ScheduledVisibilityInterface
         $this->repository->sudo(
             fn () => $this->objectStateService->setContentState(
                 $content->contentInfo,
-                $objectStateGroup->id,
+                $objectStateGroup,
                 $objectState,
             ),
         );
