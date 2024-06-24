@@ -9,8 +9,8 @@ use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\Date\Value as DateValue;
 use Ibexa\Core\FieldType\DateAndTime\Value as DateAndTimeValue;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibilityConfiguration;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityUpdateResult;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Registry;
 use OutOfBoundsException;
 
 use function in_array;
@@ -18,11 +18,7 @@ use function in_array;
 final class ScheduledVisibilityService
 {
     public function __construct(
-        private readonly Registry $registry,
-        private readonly string $type,
-        private readonly bool $enabled,
-        private readonly bool $allContentTypes,
-        private readonly array $allowedContentTypes,
+        private ScheduledVisibilityConfiguration $configurationService,
     ) {}
 
     /**
@@ -34,7 +30,7 @@ final class ScheduledVisibilityService
             return VisibilityUpdateResult::NoChange;
         }
 
-        $handler = $this->registry->get($this->type);
+        $handler = $this->configurationService->getHandler();
 
         if ($this->shouldBeHidden($content) && !$handler->isHidden($content)) {
             $handler->hide($content);
@@ -53,13 +49,13 @@ final class ScheduledVisibilityService
 
     public function accept(Content $content): bool
     {
-        $enabled = $this->enabled;
-        if (!$enabled) {
+        if (!$this->configurationService->isEnabled()) {
             return false;
         }
 
-        $allowedAll = $this->allContentTypes;
-        $allowedContentTypes = $this->allowedContentTypes;
+        $allowedAll = $this->configurationService->isAllContentTypes();
+        $allowedContentTypes = $this->configurationService->getAllowedContentTypes();
+
         $contentType = $content->getContentType();
         if (!$allowedAll && !in_array($contentType->identifier, $allowedContentTypes, true)) {
             return false;
