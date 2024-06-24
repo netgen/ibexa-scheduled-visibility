@@ -93,6 +93,7 @@ final class ObjectState implements ScheduledVisibilityInterface
     private function toggleObjectState(Content $content, int $objectStateId): void
     {
         try {
+            /** @var ObjectStateValue $objectState */
             $objectState = $this->repository->sudo(
                 fn (): ObjectStateValue => $this->objectStateService->loadObjectState($objectStateId),
             );
@@ -108,25 +109,14 @@ final class ObjectState implements ScheduledVisibilityInterface
             return;
         }
 
-        $objectStateGroupId = $this->objectStateGroupId;
-
-        try {
-            $objectStateGroup = $this->repository->sudo(
-                fn (): ObjectStateGroup => $this->objectStateService->loadObjectStateGroup($objectStateGroupId),
-            );
-        } catch (NotFoundException $e) {
-            $this->logger->error(
-                sprintf(
-                    'Configured object state group does not exist: %s',
-                    $e->getMessage(),
-                ),
-            );
-
-            return;
-        }
+        $objectStateGroup = $objectState->getObjectStateGroup();
 
         $this->repository->sudo(
-            fn () => $this->objectStateService->setContentState($content->contentInfo, $objectStateGroup, $objectState),
+            fn () => $this->objectStateService->setContentState(
+                $content->contentInfo,
+                $objectStateGroup->id,
+                $objectState,
+            ),
         );
     }
 }
