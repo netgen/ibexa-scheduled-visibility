@@ -86,9 +86,7 @@ final class ObjectState implements ScheduledVisibilityInterface
             fn (): \Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectState => $this->objectStateService->getContentState($content->contentInfo, $objectStateGroup),
         );
 
-        $hiddenObjectStateId = $this->hiddenObjectStateId;
-
-        return $hiddenObjectStateId === $objectState->id;
+        return $this->hiddenObjectStateId === $objectState->id;
     }
 
     private function toggleObjectState(Content $content, int $objectStateId): void

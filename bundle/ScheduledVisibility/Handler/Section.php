@@ -54,9 +54,7 @@ final class Section implements ScheduledVisibilityInterface
 
     public function isHidden(Content $content): bool
     {
-        $hiddenSectionId = $this->hiddenSectionId;
-
-        return $content->getContentInfo()->getSectionId() === $hiddenSectionId;
+        return $content->getContentInfo()->getSectionId() === $this->hiddenSectionId;
     }
 
     private function toggleSection(Content $content, int $sectionId): void
