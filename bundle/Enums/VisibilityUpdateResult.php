@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums;
 
-enum VisibilityAction: string
+enum VisibilityUpdateResult: string
 {
     case Hidden = 'hidden';
 

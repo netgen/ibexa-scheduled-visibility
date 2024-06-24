@@ -7,7 +7,7 @@ namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Command;
 use Ibexa\Contracts\Core\Repository\Repository;
 use Ibexa\Contracts\Core\Repository\Values\Content\Query;
 use Ibexa\Contracts\Core\Repository\Values\Content\Query\Criterion;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityAction;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityUpdateResult;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -104,7 +104,7 @@ final class UpdateContentVisibilityCommand extends Command
                 /** @var \Ibexa\Contracts\Core\Repository\Values\Content\Content $content */
                 $content = $hit->valueObject;
                 $action = $this->scheduledVisibilityService->updateVisibilityIfNeeded($content);
-                if ($action !== VisibilityAction::NoChange) {
+                if ($action !== VisibilityUpdateResult::NoChange) {
                     $this->logger->info(
                         sprintf(
                             'Content with id #%d has been %s.',

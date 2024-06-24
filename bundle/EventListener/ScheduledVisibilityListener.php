@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\EventListener;
 
 use Ibexa\Contracts\Core\Repository\Events\Content\PublishVersionEvent;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityAction;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityUpdateResult;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -31,7 +31,7 @@ final class ScheduledVisibilityListener implements EventSubscriberInterface
     {
         $content = $event->getContent();
         $action = $this->scheduledVisibilityService->updateVisibilityIfNeeded($content);
-        if ($action !== VisibilityAction::NoChange) {
+        if ($action !== VisibilityUpdateResult::NoChange) {
             $this->logger->info(
                 sprintf(
                     'Content with id #%d has been %s.',

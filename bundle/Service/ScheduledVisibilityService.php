@@ -10,7 +10,7 @@ use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\Date\Value as DateValue;
 use Ibexa\Core\FieldType\DateAndTime\Value as DateAndTimeValue;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\HandlerType;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityAction;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityUpdateResult;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
 use OutOfBoundsException;
 
@@ -30,10 +30,10 @@ final class ScheduledVisibilityService
     /**
      * @throws OutOfBoundsException
      */
-    public function updateVisibilityIfNeeded(Content $content): VisibilityAction
+    public function updateVisibilityIfNeeded(Content $content): VisibilityUpdateResult
     {
         if (!$this->accept($content)) {
-            return VisibilityAction::NoChange;
+            return VisibilityUpdateResult::NoChange;
         }
 
         $handlerType = HandlerType::from($this->type);
@@ -44,15 +44,15 @@ final class ScheduledVisibilityService
                 if ($this->shouldBeHidden($content) && !$handler->isHidden($content)) {
                     $handler->hide($content);
 
-                    return VisibilityAction::Hidden;
+                    return VisibilityUpdateResult::Hidden;
                 }
                 if ($this->shouldBeVisible($content) && $handler->isHidden($content)) {
                     $handler->reveal($content);
 
-                    return VisibilityAction::Revealed;
+                    return VisibilityUpdateResult::Revealed;
                 }
 
-                return VisibilityAction::NoChange;
+                return VisibilityUpdateResult::NoChange;
             }
         }
 
