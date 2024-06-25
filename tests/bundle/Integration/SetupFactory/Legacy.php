@@ -20,6 +20,8 @@ final class Legacy extends CoreLegacySetupFactory
         );
 
         $loader->load('services.yaml');
+        $loader->load('default_settings.yaml');
+
         $containerBuilder->addCompilerPass(new ScheduledVisibilityHandlerRegistrationPass());
     }
 }

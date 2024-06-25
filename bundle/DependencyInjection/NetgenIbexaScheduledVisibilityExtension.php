@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\DependencyInjection;
 
-use Exception;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -30,6 +29,7 @@ final class NetgenIbexaScheduledVisibilityExtension extends Extension
         );
 
         $loader->load('services.yaml');
+        $loader->load('default_settings.yaml');
 
         $this->processExtensionConfiguration($configs, $container);
     }
