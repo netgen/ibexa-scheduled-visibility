@@ -15,7 +15,6 @@ use Netgen\Bundle\IbexaScheduledVisibilityBundle\Exception\InvalidStateException
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService;
 use Pagerfanta\Doctrine\DBAL\QueryAdapter;
 use Pagerfanta\Pagerfanta;
-use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\Console\Command\Command;
@@ -36,7 +35,6 @@ final class UpdateContentVisibilityCommand extends Command
         private readonly ScheduledVisibilityService $scheduledVisibilityService,
         private readonly ScheduledVisibilityConfiguration $configurationService,
         private readonly Connection $connection,
-        private readonly CacheItemPoolInterface $cache,
         private readonly LoggerInterface $logger = new NullLogger(),
     ) {
         parent::__construct();
@@ -128,7 +126,7 @@ final class UpdateContentVisibilityCommand extends Command
 
         $results = $pager->getAdapter()->getSlice($offset, $limit);
         while (count($results) > 0) {
-            $this->processResults($results, $input);
+            $this->processResults($results);
             $offset += $limit;
             $results = $pager->getAdapter()->getSlice($offset, $limit);
         }
@@ -140,12 +138,12 @@ final class UpdateContentVisibilityCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function processResults(array $results, InputInterface $input): void
+    private function processResults(array $results): void
     {
         foreach ($results as $result) {
             try {
                 $languageId = $result['initial_language_id'];
-                $language = $this->loadLanguage($languageId, $input);
+                $language = $this->loadLanguage($languageId);
             } catch (NotFoundException $exception) {
                 $this->logger->error(
                     sprintf(
@@ -242,20 +240,13 @@ final class UpdateContentVisibilityCommand extends Command
         return new Pagerfanta(new QueryAdapter($query, $countQueryBuilderModifier));
     }
 
-    private function loadLanguage(int $id, InputInterface $input): Language
+    private function loadLanguage(int $id): Language
     {
-        $cacheItem = $this->cache->getItem("netgen-ibexa-scheduled-visibility-language-{$id}");
-
-        if ($cacheItem->isHit()) {
-            return $cacheItem->get();
+        if (!isset($this->languageCache[$id])) {
+            $language = $this->repository->getContentLanguageService()->loadLanguageById($id);
+            $this->languageCache[$id] = $language;
         }
 
-        $language = $this->repository->getContentLanguageService()->loadLanguageById($id);
-
-        $cacheItem->set($language);
-        $cacheItem->expiresAfter($input->getOption('ttl'));
-        $this->cache->save($cacheItem);
-
-        return $language;
+        return $this->languageCache[$id];
     }
 }
