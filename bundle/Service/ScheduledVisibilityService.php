@@ -40,7 +40,7 @@ final class ScheduledVisibilityService
             return VisibilityUpdateResult::Hidden;
         }
 
-        if ($this->shouldBeVisible($content) && $handler->isHidden($content)) {
+        if ($this->shouldBeVisible($content) && !$handler->isVisible($content)) {
             $handler->reveal($content);
 
             return VisibilityUpdateResult::Revealed;
