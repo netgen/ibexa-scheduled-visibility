@@ -8,7 +8,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException;
 use Ibexa\Contracts\Core\Repository\Repository;
-use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\Content\Language;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibilityConfiguration;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityUpdateResult;
@@ -162,7 +161,7 @@ final class UpdateContentVisibilityCommand extends Command
             try {
                 $contentId = $result['id'];
 
-                /** @var Content $content */
+                /** @var \Ibexa\Contracts\Core\Repository\Values\Content\Content $content */
                 $content = $this->repository->sudo(
                     fn () => $this->repository->getContentService()->loadContent(
                         $contentId,

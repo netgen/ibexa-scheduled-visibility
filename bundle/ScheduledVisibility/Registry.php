@@ -11,12 +11,12 @@ use function sprintf;
 final class Registry
 {
     /**
-     * @var ScheduledVisibilityInterface[]
+     * @var \Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface[]
      */
     private array $handlerMap = [];
 
     /**
-     * @param ScheduledVisibilityInterface[] $handlerMap
+     * @param \Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface[] $handlerMap
      */
     public function __construct(array $handlerMap = [])
     {
