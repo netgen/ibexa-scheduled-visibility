@@ -70,7 +70,7 @@ abstract class BaseTest extends APIBaseTest
     protected function getScheduledVisibilityService(): ScheduledVisibilityService
     {
         /** @var \Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService $service */
-        $service = $this->getSetupFactory()->getServiceContainer()->get('Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService');
+        $service = $this->getSetupFactory()->getServiceContainer()->get(ScheduledVisibilityService::class);
 
         return $service;
     }
