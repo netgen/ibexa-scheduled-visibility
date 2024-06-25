@@ -38,9 +38,8 @@ services:
 
     Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\ContentAndLocation:
         arguments:
-            - '@ibexa.api.repository'
-            - '@ibexa.api.service.content'
-            - '@ibexa.api.service.location'
+            - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\Content'
+            - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\Location'
         tags:
             - { name: netgen.ibexa_scheduled_visibility.handler, identifier: content_location }
 
