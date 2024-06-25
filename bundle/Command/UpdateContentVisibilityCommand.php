@@ -59,7 +59,7 @@ final class UpdateContentVisibilityCommand extends Command
             'ttl',
             't',
             InputOption::VALUE_OPTIONAL,
-            'Number of content object to process in a single iteration',
+            'Expiration time for language caching',
             3600,
         );
     }
