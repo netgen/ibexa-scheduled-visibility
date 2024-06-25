@@ -28,6 +28,7 @@ services:
 
     Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService:
         arguments:
+            - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibilityConfiguration'
             - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Registry'
 
     Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Registry:

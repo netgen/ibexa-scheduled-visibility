@@ -43,10 +43,7 @@ final class ScheduledVisibilityListener implements EventSubscriberInterface
         }
 
         try {
-            $action = $this->scheduledVisibilityService->updateVisibilityIfNeeded(
-                $content,
-                $this->configurationService->getHandler(),
-            );
+            $action = $this->scheduledVisibilityService->updateVisibilityIfNeeded($content);
         } catch (InvalidStateException $exception) {
             $this->logger->error($exception->getMessage());
 
