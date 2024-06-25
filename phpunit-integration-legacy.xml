@@ -7,6 +7,7 @@
   <testsuites>
     <testsuite name="Legacy Search Engine tests">
       <directory suffix="Test.php">./tests/bundle/Integration/</directory>
+      <exclude>./tests/bundle/Integration/BaseTest.php</exclude>
     </testsuite>
   </testsuites>
 </phpunit>
