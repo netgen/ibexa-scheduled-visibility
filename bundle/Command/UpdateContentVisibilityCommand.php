@@ -16,6 +16,7 @@ use Netgen\Bundle\IbexaScheduledVisibilityBundle\Exception\InvalidStateException
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService;
 use Pagerfanta\Doctrine\DBAL\QueryAdapter;
 use Pagerfanta\Pagerfanta;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\Console\Command\Command;
@@ -23,7 +24,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Contracts\Cache\CacheInterface;
 
 use function count;
 use function sprintf;
@@ -37,7 +37,7 @@ final class UpdateContentVisibilityCommand extends Command
         private readonly ScheduledVisibilityService $scheduledVisibilityService,
         private readonly ScheduledVisibilityConfiguration $configurationService,
         private readonly Connection $connection,
-        private readonly CacheInterface $cache,
+        private readonly CacheItemPoolInterface $cache,
         private readonly LoggerInterface $logger = new NullLogger(),
     ) {
         parent::__construct();
