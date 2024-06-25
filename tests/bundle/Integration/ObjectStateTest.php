@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaScheduledVisibility\Tests\Integration;
 
+use Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectState as ObjectStateValue;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\ObjectState;
 
 final class ObjectStateTest extends BaseTest
@@ -42,7 +43,7 @@ final class ObjectStateTest extends BaseTest
         return new ObjectState($repository, $repository->getObjectStateService(), $objectStateGroupId, $hiddenObjectStateId, $visibleObjectStateId);
     }
 
-    private function createObjectState(): \Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectState
+    private function createObjectState(): ObjectStateValue
     {
         $repository = $this->getRepository();
 

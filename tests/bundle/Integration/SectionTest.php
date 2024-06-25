@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaScheduledVisibility\Tests\Integration;
 
+use Ibexa\Contracts\Core\Repository\Values\Content\Section as SectionValue;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\Section;
 
 final class SectionTest extends BaseTest
@@ -35,7 +36,7 @@ final class SectionTest extends BaseTest
         return new Section($repository, $repository->getSectionService(), $hiddenSectionId, $visibleSectionId);
     }
 
-    private function createSection(): \Ibexa\Contracts\Core\Repository\Values\Content\Section
+    private function createSection(): SectionValue
     {
         $repository = $this->getRepository();
 
