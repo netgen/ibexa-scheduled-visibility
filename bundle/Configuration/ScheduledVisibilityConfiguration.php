@@ -30,7 +30,7 @@ final class ScheduledVisibilityConfiguration
         return $this->allowedContentTypes;
     }
 
-    public function getHandler(): string
+    public function getHandlerIdentifier(): string
     {
         return $this->handler;
     }

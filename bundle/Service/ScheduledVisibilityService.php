@@ -32,7 +32,7 @@ final class ScheduledVisibilityService
             throw new InvalidStateException($content);
         }
 
-        $handler = $this->registry->get($handlerIdentifier ?? $this->configurationService->getHandler());
+        $handler = $this->registry->get($handlerIdentifier ?? $this->configurationService->getHandlerIdentifier());
 
         if ($this->shouldBeHidden($content) && !$handler->isHidden($content)) {
             $handler->hide($content);
