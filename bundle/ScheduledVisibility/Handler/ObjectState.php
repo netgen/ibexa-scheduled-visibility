@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler;
 
-use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException;
 use Ibexa\Contracts\Core\Repository\ObjectStateService;
 use Ibexa\Contracts\Core\Repository\Repository;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
@@ -58,7 +57,7 @@ final class ObjectState implements ScheduledVisibilityInterface
                 $objectStateGroup = $objectState->getObjectStateGroup();
 
                 $this->objectStateService->setContentState(
-                    $content->contentInfo,
+                    $content->getContentInfo(),
                     $objectStateGroup,
                     $objectState,
                 );
@@ -74,7 +73,7 @@ final class ObjectState implements ScheduledVisibilityInterface
             function () use ($content, $objectStateGroupId): ObjectStateValue {
                 $objectStateGroup = $this->objectStateService->loadObjectStateGroup($objectStateGroupId);
 
-                return $this->objectStateService->getContentState($content->contentInfo, $objectStateGroup);
+                return $this->objectStateService->getContentState($content->getContentInfo(), $objectStateGroup);
             },
         );
     }

@@ -32,11 +32,11 @@ final class Content implements ScheduledVisibilityInterface
 
     public function isHidden(ContentValue $content): bool
     {
-        return $content->contentInfo->isHidden();
+        return $content->getContentInfo()->isHidden();
     }
 
     public function isVisible(ContentValue $content): bool
     {
-        return !$content->contentInfo->isHidden();
+        return !$content->getContentInfo()->isHidden();
     }
 }

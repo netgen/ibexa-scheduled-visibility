@@ -22,7 +22,7 @@ final class LocationTest extends BaseTest
         if ($scheduledVisibilityService->shouldBeVisible($content) && $handler->isHidden($content)) {
             $handler->reveal($content);
         }
-        $content = $this->getRepository()->getContentService()->loadContent($content->contentInfo->getId());
+        $content = $this->getRepository()->getContentService()->loadContent($content->getContentInfo()->getId());
         self::assertEquals($handler->isHidden($content), $expectedHidden);
     }
 

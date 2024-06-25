@@ -26,12 +26,12 @@ final class ObjectStateTest extends BaseTest
         if ($scheduledVisibilityService->shouldBeVisible($content) && $handler->isHidden($content)) {
             $handler->reveal($content);
         }
-        $content = $this->getRepository()->getContentService()->loadContent($content->contentInfo->getId());
+        $content = $this->getRepository()->getContentService()->loadContent($content->getContentInfo()->getId());
 
         $objectStateService = $this->getRepository()->getObjectStateService();
         $objectStateGroup = $objectStateService->loadObjectStateGroup(2);
         $objectState = $this->getRepository()->sudo(
-            static fn (): \Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectState => $objectStateService->getContentState($content->contentInfo, $objectStateGroup),
+            static fn (): \Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectState => $objectStateService->getContentState($content->getContentInfo(), $objectStateGroup),
         );
         self::assertEquals($objectState->id, $expectedHidden ? $hiddenObjectState->id : $visibleObjectStateId);
     }
