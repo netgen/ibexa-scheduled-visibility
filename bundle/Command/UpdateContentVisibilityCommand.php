@@ -243,9 +243,6 @@ final class UpdateContentVisibilityCommand extends Command
         return new Pagerfanta(new QueryAdapter($query, $countQueryBuilderModifier));
     }
 
-    /**
-     * @throws NotFoundException
-     */
     private function loadLanguage(int $id, InputInterface $input): Language
     {
         $cacheItem = $this->cache->getItem("netgen-ibexa-scheduled-visibility-language-{$id}");

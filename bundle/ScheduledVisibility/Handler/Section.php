@@ -19,9 +19,6 @@ final class Section implements ScheduledVisibilityInterface
         private readonly int $visibleSectionId,
     ) {}
 
-    /**
-     * @throws NotFoundException
-     */
     public function hide(Content $content): void
     {
         $hiddenSectionId = $this->hiddenSectionId;
@@ -29,9 +26,6 @@ final class Section implements ScheduledVisibilityInterface
         $this->assignSection($content, $hiddenSectionId);
     }
 
-    /**
-     * @throws NotFoundException
-     */
     public function reveal(Content $content): void
     {
         $visibleSectionId = $this->visibleSectionId;
@@ -49,9 +43,6 @@ final class Section implements ScheduledVisibilityInterface
         return $content->getContentInfo()->getSectionId() === $this->visibleSectionId;
     }
 
-    /**
-     * @throws NotFoundException
-     */
     private function assignSection(Content $content, int $sectionId): void
     {
         $this->repository->sudo(

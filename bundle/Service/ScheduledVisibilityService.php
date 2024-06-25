@@ -13,7 +13,6 @@ use Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibili
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityUpdateResult;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Exception\InvalidStateException;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Registry;
-use OutOfBoundsException;
 
 final class ScheduledVisibilityService
 {
@@ -23,7 +22,6 @@ final class ScheduledVisibilityService
     ) {}
 
     /**
-     * @throws OutOfBoundsException
      * @throws InvalidStateException
      */
     public function updateVisibilityIfNeeded(Content $content, ?string $handlerIdentifier = null): VisibilityUpdateResult

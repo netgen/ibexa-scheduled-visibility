@@ -22,9 +22,6 @@ final class NetgenIbexaScheduledVisibilityExtension extends Extension
         return new Configuration($this->getAlias());
     }
 
-    /**
-     * @throws Exception
-     */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new Loader\YamlFileLoader(

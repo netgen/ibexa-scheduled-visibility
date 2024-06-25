@@ -32,6 +32,9 @@ final class ScheduledVisibilityHandlerRegistrationPass implements CompilerPassIn
         }
     }
 
+    /**
+     * @throws LogicException
+     */
     private function registerHandler(Definition $handlerRegistryDefinition, string $id, array $attributes): void
     {
         foreach ($attributes as $attribute) {

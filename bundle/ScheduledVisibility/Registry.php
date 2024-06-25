@@ -30,6 +30,9 @@ final class Registry
         $this->handlerMap[$identifier] = $handler;
     }
 
+    /**
+     * @throws OutOfBoundsException
+     */
     public function get(?string $identifier): ScheduledVisibilityInterface
     {
         return $this->handlerMap[$identifier] ?? throw new OutOfBoundsException(

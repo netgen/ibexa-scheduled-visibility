@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaScheduledVisibility\Tests\DependencyInjection;
 
-use Exception;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\DependencyInjection\NetgenIbexaScheduledVisibilityExtension;
 
 final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
 {
-    /**
-     * @throws Exception
-     */
     protected function setUp(): void
     {
         parent::setUp();
