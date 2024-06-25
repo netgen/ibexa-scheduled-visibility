@@ -51,6 +51,9 @@ final class ObjectState implements ScheduledVisibilityInterface
         return $this->hiddenObjectStateId === $objectState->id;
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function isVisible(Content $content): bool
     {
         $objectState = $this->getObjectState($content);
@@ -66,7 +69,9 @@ final class ObjectState implements ScheduledVisibilityInterface
         $this->repository->sudo(
             function () use ($content, $objectStateId): void {
                 $objectState = $this->objectStateService->loadObjectState($objectStateId);
+
                 $objectStateGroup = $objectState->getObjectStateGroup();
+
                 $this->objectStateService->setContentState(
                     $content->contentInfo,
                     $objectStateGroup,
@@ -76,6 +81,9 @@ final class ObjectState implements ScheduledVisibilityInterface
         );
     }
 
+    /**
+     * @throws NotFoundException
+     */
     private function getObjectState(Content $content): ObjectStateValue
     {
         $objectStateGroupId = $this->objectStateGroupId;
