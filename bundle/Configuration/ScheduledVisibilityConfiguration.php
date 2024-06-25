@@ -37,10 +37,6 @@ final class ScheduledVisibilityConfiguration
 
     public function isContentTypeAllowed(string $contentType): bool
     {
-        if (!$this->allContentTypes && !in_array($contentType, $this->allowedContentTypes, true)) {
-            return false;
-        }
-
-        return true;
+        return $this->allContentTypes || in_array($contentType, $this->allowedContentTypes, true);
     }
 }
