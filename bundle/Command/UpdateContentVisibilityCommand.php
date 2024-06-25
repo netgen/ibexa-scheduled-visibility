@@ -129,7 +129,7 @@ final class UpdateContentVisibilityCommand extends Command
                     $this->logger->info(
                         sprintf(
                             "Content '%s' with id #%d has been %s.",
-                            $content->getContentInfo()->getName(),
+                            $content->getName(),
                             $content->getId(),
                             $action->value,
                         ),
