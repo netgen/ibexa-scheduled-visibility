@@ -9,7 +9,6 @@ use Ibexa\Contracts\Core\Repository\ObjectStateService;
 use Ibexa\Contracts\Core\Repository\Repository;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectState as ObjectStateValue;
-use Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectStateGroup;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
 
 final class ObjectState implements ScheduledVisibilityInterface
@@ -64,31 +63,29 @@ final class ObjectState implements ScheduledVisibilityInterface
      */
     private function setObjectState(Content $content, int $objectStateId): void
     {
-        /** @var ObjectStateValue $objectState */
-        $objectState = $this->repository->sudo(
-            fn (): ObjectStateValue => $this->objectStateService->loadObjectState($objectStateId),
-        );
-
-        $objectStateGroup = $objectState->getObjectStateGroup();
-
         $this->repository->sudo(
-            fn () => $this->objectStateService->setContentState(
-                $content->contentInfo,
-                $objectStateGroup,
-                $objectState,
-            ),
+            function () use ($content, $objectStateId): void {
+                $objectState = $this->objectStateService->loadObjectState($objectStateId);
+                $objectStateGroup = $objectState->getObjectStateGroup();
+                $this->objectStateService->setContentState(
+                    $content->contentInfo,
+                    $objectStateGroup,
+                    $objectState,
+                );
+            },
         );
     }
 
     private function getObjectState(Content $content): ObjectStateValue
     {
         $objectStateGroupId = $this->objectStateGroupId;
-        $objectStateGroup = $this->repository->sudo(
-            fn (): ObjectStateGroup => $this->objectStateService->loadObjectStateGroup($objectStateGroupId),
-        );
 
         return $this->repository->sudo(
-            fn (): ObjectStateValue => $this->objectStateService->getContentState($content->contentInfo, $objectStateGroup),
+            function () use ($content, $objectStateGroupId): ObjectStateValue {
+                $objectStateGroup = $this->objectStateService->loadObjectStateGroup($objectStateGroupId);
+
+                return $this->objectStateService->getContentState($content->contentInfo, $objectStateGroup);
+            },
         );
     }
 }

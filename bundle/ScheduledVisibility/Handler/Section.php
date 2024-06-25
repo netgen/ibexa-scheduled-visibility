@@ -48,11 +48,12 @@ final class Section implements ScheduledVisibilityInterface
      */
     private function assignSection(Content $content, int $sectionId): void
     {
-        $section = $this->repository->sudo(
-            fn (): \Ibexa\Contracts\Core\Repository\Values\Content\Section => $this->sectionService->loadSection($sectionId),
-        );
         $this->repository->sudo(
-            fn () => $this->sectionService->assignSection($content->getContentInfo(), $section),
+            function () use ($content, $sectionId): void {
+                $section = $this->sectionService->loadSection($sectionId);
+
+                $this->sectionService->assignSection($content->getContentInfo(), $section);
+            },
         );
     }
 }

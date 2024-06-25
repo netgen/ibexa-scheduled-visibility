@@ -21,35 +21,31 @@ final class ContentAndLocation implements ScheduledVisibilityInterface
     public function hide(Content $content): void
     {
         $this->repository->sudo(
-            fn () => $this->contentService->hideContent($content->getContentInfo()),
-        );
+            function () use ($content): void {
+                $this->contentService->hideContent($content->getContentInfo());
 
-        $locations = $this->repository->sudo(
-            fn () => $this->locationService->loadLocations($content->getContentInfo()),
-        );
+                $locations = $this->locationService->loadLocations($content->getContentInfo());
 
-        foreach ($locations as $location) {
-            $this->repository->sudo(
-                fn () => $this->locationService->hideLocation($location),
-            );
-        }
+                foreach ($locations as $location) {
+                    $this->locationService->hideLocation($location);
+                }
+            },
+        );
     }
 
     public function reveal(Content $content): void
     {
         $this->repository->sudo(
-            fn () => $this->contentService->revealContent($content->getContentInfo()),
-        );
+            function () use ($content): void {
+                $this->contentService->revealContent($content->getContentInfo());
 
-        $locations = $this->repository->sudo(
-            fn () => $this->locationService->loadLocations($content->getContentInfo()),
-        );
+                $locations = $this->locationService->loadLocations($content->getContentInfo());
 
-        foreach ($locations as $location) {
-            $this->repository->sudo(
-                fn () => $this->locationService->unhideLocation($location),
-            );
-        }
+                foreach ($locations as $location) {
+                    $this->locationService->unhideLocation($location);
+                }
+            },
+        );
     }
 
     public function isHidden(Content $content): bool
@@ -63,7 +59,10 @@ final class ContentAndLocation implements ScheduledVisibilityInterface
             return false;
         }
 
-        $locations = $this->locationService->loadLocations($content->contentInfo);
+        $locations = $this->repository->sudo(
+            fn () => $this->locationService->loadLocations($content->getContentInfo()),
+        );
+
         foreach ($locations as $location) {
             if ($location->isHidden()) {
                 return false;

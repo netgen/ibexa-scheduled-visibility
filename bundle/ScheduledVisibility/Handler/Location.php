@@ -18,28 +18,28 @@ final class Location implements ScheduledVisibilityInterface
 
     public function hide(Content $content): void
     {
-        $locations = $this->repository->sudo(
-            fn () => $this->locationService->loadLocations($content->getContentInfo()),
-        );
+        $this->repository->sudo(
+            function () use ($content): void {
+                $locations = $this->locationService->loadLocations($content->getContentInfo());
 
-        foreach ($locations as $location) {
-            $this->repository->sudo(
-                fn () => $this->locationService->hideLocation($location),
-            );
-        }
+                foreach ($locations as $location) {
+                    $this->locationService->hideLocation($location);
+                }
+            },
+        );
     }
 
     public function reveal(Content $content): void
     {
-        $locations = $this->repository->sudo(
-            fn () => $this->locationService->loadLocations($content->getContentInfo()),
-        );
+        $this->repository->sudo(
+            function () use ($content): void {
+                $locations = $this->locationService->loadLocations($content->getContentInfo());
 
-        foreach ($locations as $location) {
-            $this->repository->sudo(
-                fn () => $this->locationService->unhideLocation($location),
-            );
-        }
+                foreach ($locations as $location) {
+                    $this->locationService->unhideLocation($location);
+                }
+            },
+        );
     }
 
     public function isHidden(Content $content): bool
@@ -49,7 +49,9 @@ final class Location implements ScheduledVisibilityInterface
 
     public function isVisible(Content $content): bool
     {
-        $locations = $this->locationService->loadLocations($content->contentInfo);
+        $locations = $this->repository->sudo(
+            fn () => $this->locationService->loadLocations($content->getContentInfo()),
+        );
 
         foreach ($locations as $location) {
             if ($location->isHidden()) {
