@@ -9,6 +9,7 @@ use Ibexa\Contracts\Core\Repository\Values\Content\Query;
 use Ibexa\Contracts\Core\Repository\Values\Content\Query\Criterion;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibilityConfiguration;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityUpdateResult;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Exception\InvalidStateException;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -115,14 +116,23 @@ final class UpdateContentVisibilityCommand extends Command
             foreach ($searchResult->searchHits as $hit) {
                 /** @var \Ibexa\Contracts\Core\Repository\Values\Content\Content $content */
                 $content = $hit->valueObject;
-                $action = $this->scheduledVisibilityService->updateVisibilityIfNeeded(
-                    $content,
-                    $this->configurationService->getHandler(),
-                );
+
+                try {
+                    $action = $this->scheduledVisibilityService->updateVisibilityIfNeeded(
+                        $content,
+                        $this->configurationService->getHandler(),
+                    );
+                } catch (InvalidStateException $exception) {
+                    $this->logger->error($exception->getMessage());
+
+                    continue;
+                }
+
                 if ($action !== VisibilityUpdateResult::NoChange) {
                     $this->logger->info(
                         sprintf(
-                            'Content with id #%d has been %s.',
+                            "Content '%s' with id #%d has been %s.",
+                            $content->getContentInfo()->getName(),
                             $content->getId(),
                             $action->value,
                         ),

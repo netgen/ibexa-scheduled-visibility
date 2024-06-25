@@ -10,6 +10,7 @@ use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\Date\Value as DateValue;
 use Ibexa\Core\FieldType\DateAndTime\Value as DateAndTimeValue;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityUpdateResult;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Exception\InvalidStateException;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Registry;
 use OutOfBoundsException;
 
@@ -21,11 +22,12 @@ final class ScheduledVisibilityService
 
     /**
      * @throws OutOfBoundsException
+     * @throws InvalidStateException
      */
     public function updateVisibilityIfNeeded(Content $content, ?string $handlerIdentifier = null): VisibilityUpdateResult
     {
-        if (!$this->accept($content)) {
-            return VisibilityUpdateResult::NoChange;
+        if (!$this->isValid($content)) {
+            throw new InvalidStateException($content);
         }
 
         $handler = $this->registry->get($handlerIdentifier);
@@ -45,36 +47,6 @@ final class ScheduledVisibilityService
         return VisibilityUpdateResult::NoChange;
     }
 
-    public function accept(Content $content): bool
-    {
-        $contentType = $content->getContentType();
-
-        $fieldDefinitions = $contentType->getFieldDefinitions();
-        if (!$fieldDefinitions->has('publish_from') || !$fieldDefinitions->has('publish_to')) {
-            return false;
-        }
-
-        /** @var Field $publishFromField */
-        $publishFromField = $content->getField('publish_from');
-
-        /** @var Field $publishToField */
-        $publishToField = $content->getField('publish_to');
-        if (
-            ($publishFromField->fieldTypeIdentifier !== 'ezdatetime' && $publishFromField->fieldTypeIdentifier !== 'ezdate')
-            || ($publishToField->fieldTypeIdentifier !== 'ezdatetime' && $publishToField->fieldTypeIdentifier !== 'ezdate')
-        ) {
-            return false;
-        }
-
-        $publishFromDateTime = $this->getDateTime($publishFromField);
-        $publishToDateTime = $this->getDateTime($publishToField);
-        if ($publishFromDateTime !== null && $publishToDateTime !== null && $publishToDateTime <= $publishFromDateTime) {
-            return false;
-        }
-
-        return true;
-    }
-
     public function shouldBeHidden(Content $content): bool
     {
         $publishFromField = $content->getField('publish_from');
@@ -83,9 +55,17 @@ final class ScheduledVisibilityService
         $publishFromDateTime = $this->getDateTime($publishFromField);
         $publishToDateTime = $this->getDateTime($publishToField);
 
+        if ($publishToDateTime === null && $publishFromDateTime === null) {
+            return false;
+        }
+
         $currentDateTime = new DateTime();
-        if (($publishFromDateTime !== null && $publishFromDateTime > $currentDateTime)
-            || ($publishToDateTime !== null && $publishToDateTime <= $currentDateTime)) {
+
+        if ($publishFromDateTime !== null && $publishFromDateTime > $currentDateTime) {
+            return true;
+        }
+
+        if ($publishToDateTime !== null && $publishToDateTime <= $currentDateTime) {
             return true;
         }
 
@@ -101,18 +81,50 @@ final class ScheduledVisibilityService
         $publishToDateTime = $this->getDateTime($publishToField);
 
         if ($publishToDateTime === null && $publishFromDateTime === null) {
-            return true;
+            return false;
         }
 
         $currentDateTime = new DateTime();
-        if (($publishFromDateTime !== null && $publishFromDateTime <= $currentDateTime
-            && ($publishToDateTime === null || $publishToDateTime > $currentDateTime))
-            || ($publishFromDateTime === null && $publishToDateTime > $currentDateTime)
-        ) {
+
+        if ($publishFromDateTime === null && $publishToDateTime > $currentDateTime) {
+            return true;
+        }
+
+        if ($publishToDateTime === null && $publishFromDateTime <= $currentDateTime) {
+            return true;
+        }
+
+        if ($publishFromDateTime !== null && $publishFromDateTime <= $currentDateTime
+            && $publishToDateTime !== null && $publishToDateTime > $currentDateTime) {
             return true;
         }
 
         return false;
+    }
+
+    private function isValid(Content $content): bool
+    {
+        $publishFromField = $content->getField('publish_from');
+        $publishToField = $content->getField('publish_to');
+
+        if ($publishFromField === null || $publishToField === null) {
+            return false;
+        }
+
+        if (
+            ($publishFromField->fieldTypeIdentifier !== 'ezdatetime' && $publishFromField->fieldTypeIdentifier !== 'ezdate')
+            || ($publishToField->fieldTypeIdentifier !== 'ezdatetime' && $publishToField->fieldTypeIdentifier !== 'ezdate')
+        ) {
+            return false;
+        }
+
+        $publishFromDateTime = $this->getDateTime($publishFromField);
+        $publishToDateTime = $this->getDateTime($publishToField);
+        if ($publishFromDateTime !== null && $publishToDateTime !== null && $publishToDateTime <= $publishFromDateTime) {
+            return false;
+        }
+
+        return true;
     }
 
     private function getDateTime(Field $field): null|DateTime
