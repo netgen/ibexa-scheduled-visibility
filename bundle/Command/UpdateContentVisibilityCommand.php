@@ -102,7 +102,7 @@ final class UpdateContentVisibilityCommand extends Command
                 }
             }
             if (count($contentTypeIds) > 0) {
-                $this->applyContentTypeLimit($query, array_values($contentTypeIds));
+                $query = $this->applyContentTypeLimit($query, array_values($contentTypeIds));
             }
         }
 
