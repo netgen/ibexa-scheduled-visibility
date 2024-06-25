@@ -80,6 +80,7 @@ services:
             - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService'
             - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibilityConfiguration'
             - '@ibexa.persistence.connection'
+            - "@cache.app"
             - '@?logger'
         tags:
             - { name: console.command, command: 'ngscheduledvisibility:content:update-visibility' }

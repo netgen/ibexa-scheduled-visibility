@@ -23,8 +23,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Contracts\Cache\CacheInterface;
 
-use function array_values;
 use function count;
 use function sprintf;
 
@@ -37,6 +37,7 @@ final class UpdateContentVisibilityCommand extends Command
         private readonly ScheduledVisibilityService $scheduledVisibilityService,
         private readonly ScheduledVisibilityConfiguration $configurationService,
         private readonly Connection $connection,
+        private readonly CacheInterface $cache,
         private readonly LoggerInterface $logger = new NullLogger(),
     ) {
         parent::__construct();
@@ -53,6 +54,13 @@ final class UpdateContentVisibilityCommand extends Command
             InputOption::VALUE_OPTIONAL,
             'Number of content object to process in a single iteration',
             50,
+        );
+        $this->addOption(
+            'ttl',
+            't',
+            InputOption::VALUE_OPTIONAL,
+            'Number of content object to process in a single iteration',
+            3600,
         );
     }
 
@@ -84,8 +92,8 @@ final class UpdateContentVisibilityCommand extends Command
 
         $query = $this->getQueryBuilder();
 
+        $contentTypeIds = [];
         if (!$allContentTypes && count($allowedContentTypes) > 0) {
-            $contentTypeIds = [];
             foreach ($allowedContentTypes as $allowedContentType) {
                 try {
                     $contentTypeIds[] = $this->repository->getContentTypeService()->loadContentTypeByIdentifier($allowedContentType)->id;
@@ -101,12 +109,12 @@ final class UpdateContentVisibilityCommand extends Command
                     continue;
                 }
             }
-            if (count($contentTypeIds) > 0) {
-                $query = $this->applyContentTypeLimit($query, array_values($contentTypeIds));
-            }
         }
 
-        $pager = $this->getPager($query);
+        $this->applyContentTypeLimit($query, $contentTypeIds);
+
+        $pager = $this->getPager($query, $contentTypeIds);
+
         if ($pager->getNbResults() === 0) {
             $output->writeln('No content found.');
 
@@ -115,73 +123,17 @@ final class UpdateContentVisibilityCommand extends Command
 
         $limit = $input->getOption('limit');
         $offset = 0;
+
         $this->style->createProgressBar($pager->getNbResults());
         $this->style->progressStart();
+
         $results = $pager->getAdapter()->getSlice($offset, $limit);
-
         while (count($results) > 0) {
-            foreach ($results as $result) {
-                try {
-                    $languageId = $result['initial_language_id'];
-
-                    /** @var Language $language */
-                    $language = $this->repository->sudo(
-                        fn () => $this->repository->getContentLanguageService()->loadLanguageById($result['initial_language_id']),
-                    );
-                } catch (NotFoundException $exception) {
-                    $this->logger->error(
-                        sprintf(
-                            'Language with id #%d does not exist: %s',
-                            $languageId,
-                            $exception->getMessage(),
-                        ),
-                    );
-
-                    continue;
-                }
-
-                try {
-                    $contentId = $result['id'];
-
-                    /** @var Content $content */
-                    $content = $this->repository->sudo(
-                        fn () => $this->repository->getContentService()->loadContent($result['id'], [$language->getLanguageCode()]),
-                    );
-                } catch (NotFoundException $exception) {
-                    $this->logger->error(
-                        sprintf(
-                            'Content with id #%d does not exist: %s',
-                            $contentId,
-                            $exception->getMessage(),
-                        ),
-                    );
-
-                    continue;
-                }
-
-                try {
-                    $action = $this->scheduledVisibilityService->updateVisibilityIfNeeded($content);
-                } catch (InvalidStateException $exception) {
-                    $this->logger->error($exception->getMessage());
-
-                    continue;
-                }
-
-                if ($action !== VisibilityUpdateResult::NoChange) {
-                    $this->logger->info(
-                        sprintf(
-                            "Content '%s' with id #%d has been %s.",
-                            $content->getName(),
-                            $content->getId(),
-                            $action->value,
-                        ),
-                    );
-                }
-                $this->style->progressAdvance();
-            }
+            $this->processResults($results, $input);
             $offset += $limit;
             $results = $pager->getAdapter()->getSlice($offset, $limit);
         }
+
         $this->style->progressFinish();
 
         $this->style->info('Done.');
@@ -189,32 +141,125 @@ final class UpdateContentVisibilityCommand extends Command
         return Command::SUCCESS;
     }
 
+    private function processResults(array $results, InputInterface $input): void
+    {
+        foreach ($results as $result) {
+            try {
+                $languageId = $result['initial_language_id'];
+                $language = $this->loadLanguage($languageId, $input);
+            } catch (NotFoundException $exception) {
+                $this->logger->error(
+                    sprintf(
+                        'Language with id #%d does not exist: %s',
+                        $languageId,
+                        $exception->getMessage(),
+                    ),
+                );
+
+                continue;
+            }
+
+            try {
+                $contentId = $result['id'];
+
+                /** @var Content $content */
+                $content = $this->repository->sudo(
+                    fn () => $this->repository->getContentService()->loadContent(
+                        $contentId,
+                        [$language->getLanguageCode()],
+                    ),
+                );
+            } catch (NotFoundException $exception) {
+                $this->logger->error(
+                    sprintf(
+                        'Content with id #%d does not exist: %s',
+                        $contentId,
+                        $exception->getMessage(),
+                    ),
+                );
+
+                continue;
+            }
+
+            try {
+                $action = $this->scheduledVisibilityService->updateVisibilityIfNeeded($content);
+            } catch (InvalidStateException $exception) {
+                $this->logger->error($exception->getMessage());
+
+                continue;
+            }
+
+            if ($action !== VisibilityUpdateResult::NoChange) {
+                $this->logger->info(
+                    sprintf(
+                        "Content '%s' with id #%d has been %s.",
+                        $content->getName(),
+                        $content->getId(),
+                        $action->value,
+                    ),
+                );
+            }
+
+            $this->style->progressAdvance();
+        }
+    }
+
     private function getQueryBuilder(): QueryBuilder
     {
         $query = $this->connection->createQueryBuilder();
         $query
             ->select('id', 'initial_language_id')
-            ->from('ezcontentobject');
+            ->from('ezcontentobject')
+            ->where('published != :unpublished')
+            ->orderBy('id', 'ASC')
+            ->setParameter('unpublished', 0);
 
         return $query;
     }
 
-    private function applyContentTypeLimit(QueryBuilder $query, array $contentTypeIds): QueryBuilder
+    private function applyContentTypeLimit(QueryBuilder $query, array $contentTypeIds): void
     {
-        $query = $query->where(
+        $query->where(
             $query->expr()->in('contentclass_id', ':content_type_ids'),
         )->setParameter('content_type_ids', $contentTypeIds, Connection::PARAM_INT_ARRAY);
-
-        return $query;
     }
 
-    private function getPager(QueryBuilder $query): Pagerfanta
+    private function getPager(QueryBuilder $query, array $contentTypeIds): Pagerfanta
     {
-        $countQueryBuilderModifier = static function (QueryBuilder $queryBuilder): void {
+        $countQueryBuilderModifier = static function (QueryBuilder $queryBuilder) use ($contentTypeIds): void {
             $queryBuilder->select('COUNT(id) AS total_results')
+                ->from('ezcontentobject')
+                ->where('published != :unpublished')
+                ->setParameter('unpublished', 0)
                 ->setMaxResults(1);
+
+            if (count($contentTypeIds) > 0) {
+                $queryBuilder->where(
+                    $queryBuilder->expr()->in('contentclass_id', ':content_type_ids'),
+                )->setParameter('content_type_ids', $contentTypeIds, Connection::PARAM_INT_ARRAY);
+            }
         };
 
         return new Pagerfanta(new QueryAdapter($query, $countQueryBuilderModifier));
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    private function loadLanguage(int $id, InputInterface $input): Language
+    {
+        $cacheItem = $this->cache->getItem("netgen-ibexa-scheduled-visibility-language-{$id}");
+
+        if ($cacheItem->isHit()) {
+            return $cacheItem->get();
+        }
+
+        $language = $this->repository->getContentLanguageService()->loadLanguageById($id);
+
+        $cacheItem->set($language);
+        $cacheItem->expiresAfter($input->getOption('ttl'));
+        $this->cache->save($cacheItem);
+
+        return $language;
     }
 }
