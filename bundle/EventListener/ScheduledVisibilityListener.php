@@ -32,12 +32,11 @@ final class ScheduledVisibilityListener implements EventSubscriberInterface
 
     public function onPublishVersion(PublishVersionEvent $event): void
     {
-        $content = $event->getContent();
-
         if (!$this->configurationService->isEnabled()) {
             return;
         }
 
+        $content = $event->getContent();
         if (!$this->configurationService->isContentTypeAllowed($content->getContentType()->identifier)) {
             return;
         }
