@@ -12,7 +12,7 @@ use Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityServ
 
 abstract class BaseTest extends APIBaseTest
 {
-    protected function provideCases(): iterable
+    public static function provideCases(): iterable
     {
         return [
             [

@@ -16,7 +16,7 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
         $this->setParameter('kernel.bundles', []);
     }
 
-    public function provideDefaultConfigurationCases(): iterable
+    public static function provideDefaultConfigurationCases(): iterable
     {
         return [
             [
@@ -100,7 +100,7 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
         ];
     }
 
-    public function provideEnabledConfigurationCases(): iterable
+    public static function provideEnabledConfigurationCases(): iterable
     {
         return [
             [
@@ -122,7 +122,7 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
         ];
     }
 
-    public function provideHandlerConfigurationCases(): iterable
+    public static function provideHandlerConfigurationCases(): iterable
     {
         return [
             [
@@ -158,7 +158,7 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
         ];
     }
 
-    public function provideSectionConfigurationCases(): iterable
+    public static function provideSectionConfigurationCases(): iterable
     {
         return [
             [
@@ -196,7 +196,7 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
         ];
     }
 
-    public function provideObjectStateConfigurationCases(): iterable
+    public static function provideObjectStateConfigurationCases(): iterable
     {
         return [
             [
@@ -238,7 +238,7 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
         ];
     }
 
-    public function provideContentTypesConfigurationCases(): iterable
+    public static function provideContentTypesConfigurationCases(): iterable
     {
         return [
             [
