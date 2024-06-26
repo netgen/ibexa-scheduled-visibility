@@ -14,7 +14,7 @@ use function sprintf;
 
 final class ScheduledVisibilityHandlerRegistrationPass implements CompilerPassInterface
 {
-    private string $handlerRegistryId = 'Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Registry';
+    private string $handlerRegistryId = 'Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\Registry';
     private string $handlerTag = 'netgen.ibexa_scheduled_visibility.handler';
 
     public function process(ContainerBuilder $container): void

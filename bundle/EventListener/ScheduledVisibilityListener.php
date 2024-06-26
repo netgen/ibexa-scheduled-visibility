@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\EventListener;
 
 use Ibexa\Contracts\Core\Repository\Events\Content\PublishVersionEvent;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibilityConfiguration;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityUpdateResult;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Exception\InvalidStateException;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\Configuration;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\Enum\VisibilityUpdateResult;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\Exception\InvalidStateException;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\ScheduledVisibilityService;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -19,7 +19,7 @@ final class ScheduledVisibilityListener implements EventSubscriberInterface
 {
     public function __construct(
         private readonly ScheduledVisibilityService $scheduledVisibilityService,
-        private readonly ScheduledVisibilityConfiguration $configurationService,
+        private readonly Configuration $configurationService,
         private readonly LoggerInterface $logger = new NullLogger(),
     ) {}
 

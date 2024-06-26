@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Exception;
+namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\Exception;
 
 use Exception;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Netgen\IbexaScheduledVisibility\Tests\Integration;
 
 use Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectState as ObjectStateValue;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\ObjectState;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler\ObjectState;
 
 final class ObjectStateTest extends BaseTest
 {

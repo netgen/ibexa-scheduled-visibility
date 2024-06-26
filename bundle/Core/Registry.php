@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility;
+namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Core;
 
 use OutOfBoundsException;
 
@@ -11,12 +11,12 @@ use function sprintf;
 final class Registry
 {
     /**
-     * @var \Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface[]
+     * @var \Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler[]
      */
     private array $handlerMap = [];
 
     /**
-     * @param \Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface[] $handlerMap
+     * @param \Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler[] $handlerMap
      */
     public function __construct(array $handlerMap = [])
     {
@@ -25,7 +25,7 @@ final class Registry
         }
     }
 
-    public function register(string $identifier, ScheduledVisibilityInterface $handler): void
+    public function register(string $identifier, VisibilityHandler $handler): void
     {
         $this->handlerMap[$identifier] = $handler;
     }
@@ -33,7 +33,7 @@ final class Registry
     /**
      * @throws OutOfBoundsException
      */
-    public function get(?string $identifier): ScheduledVisibilityInterface
+    public function get(?string $identifier): VisibilityHandler
     {
         return $this->handlerMap[$identifier] ?? throw new OutOfBoundsException(
             sprintf(

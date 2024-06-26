@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Netgen\IbexaScheduledVisibility\Tests\Integration;
 
 use Ibexa\Contracts\Core\Repository\Values\Content\Section as SectionValue;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\Section;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler\Section;
 
 final class SectionTest extends BaseTest
 {

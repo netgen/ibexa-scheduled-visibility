@@ -9,9 +9,9 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException;
 use Ibexa\Contracts\Core\Repository\Repository;
 use Ibexa\Contracts\Core\Repository\Values\Content\Language;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibilityConfiguration;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Exception\InvalidStateException;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\Configuration;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\Exception\InvalidStateException;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\ScheduledVisibilityService;
 use Pagerfanta\Doctrine\DBAL\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Psr\Log\LoggerInterface;
@@ -33,7 +33,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
     public function __construct(
         private readonly Repository $repository,
         private readonly ScheduledVisibilityService $scheduledVisibilityService,
-        private readonly ScheduledVisibilityConfiguration $configurationService,
+        private readonly Configuration $configurationService,
         private readonly Connection $connection,
         private readonly LoggerInterface $logger = new NullLogger(),
     ) {

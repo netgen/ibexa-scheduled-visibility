@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration;
+namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Core;
 
 use function in_array;
 
-final class ScheduledVisibilityConfiguration
+final class Configuration
 {
     public function __construct(
         private readonly string $handler,

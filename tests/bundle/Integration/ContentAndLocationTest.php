@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaScheduledVisibility\Tests\Integration;
 
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\Content;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\ContentAndLocation;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\Location;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler\Content;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler\ContentAndLocation;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler\Location;
 
 final class ContentAndLocationTest extends BaseTest
 {
@@ -30,10 +30,10 @@ final class ContentAndLocationTest extends BaseTest
 
     private function getContentAndLocationHandler(): ContentAndLocation
     {
-        /** @var \Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\Content $contentHandler */
+        /** @var \Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler\Content $contentHandler */
         $contentHandler = $this->getSetupFactory()->getServiceContainer()->get(Content::class);
 
-        /** @var \Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\Location $locationHandler */
+        /** @var \Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler\Location $locationHandler */
         $locationHandler = $this->getSetupFactory()->getServiceContainer()->get(Location::class);
 
         return new ContentAndLocation($contentHandler, $locationHandler);

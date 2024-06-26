@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler;
+namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler;
 
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\Content as ContentHandler;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\Location as LocationHandler;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler\Content as ContentHandler;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler\Location as LocationHandler;
 
-final class ContentAndLocation implements ScheduledVisibilityInterface
+final class ContentAndLocation extends VisibilityHandler
 {
     public function __construct(
         private readonly ContentHandler $contentHandler,

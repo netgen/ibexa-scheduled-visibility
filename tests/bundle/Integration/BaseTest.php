@@ -8,7 +8,7 @@ use DateTime;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
 use Ibexa\Tests\Integration\Core\Repository\BaseTest as APIBaseTest;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\ScheduledVisibilityService;
 
 abstract class BaseTest extends APIBaseTest
 {
@@ -69,7 +69,7 @@ abstract class BaseTest extends APIBaseTest
 
     protected function getScheduledVisibilityService(): ScheduledVisibilityService
     {
-        /** @var \Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService $service */
+        /** @var \Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\ScheduledVisibilityService $service */
         $service = $this->getSetupFactory()->getServiceContainer()->get(ScheduledVisibilityService::class);
 
         return $service;

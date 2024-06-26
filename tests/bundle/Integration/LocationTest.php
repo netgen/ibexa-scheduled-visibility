@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaScheduledVisibility\Tests\Integration;
 
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler\Location;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler\Location;
 
 final class LocationTest extends BaseTest
 {

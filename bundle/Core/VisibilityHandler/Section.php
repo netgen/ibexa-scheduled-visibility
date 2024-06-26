@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Handler;
+namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler;
 
 use Ibexa\Contracts\Core\Repository\Repository;
 use Ibexa\Contracts\Core\Repository\SectionService;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\ScheduledVisibilityInterface;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler;
 
-final class Section implements ScheduledVisibilityInterface
+final class Section extends VisibilityHandler
 {
     public function __construct(
         private readonly Repository $repository,

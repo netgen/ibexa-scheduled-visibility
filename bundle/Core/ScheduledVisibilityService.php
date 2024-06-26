@@ -2,17 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Service;
+namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Core;
 
 use DateTime;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\Date\Value as DateValue;
 use Ibexa\Core\FieldType\DateAndTime\Value as DateAndTimeValue;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibilityConfiguration;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityUpdateResult;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Exception\InvalidStateException;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Registry;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\Enum\VisibilityUpdateResult;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\Exception\InvalidStateException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -21,7 +19,7 @@ use function sprintf;
 final class ScheduledVisibilityService
 {
     public function __construct(
-        private readonly ScheduledVisibilityConfiguration $configurationService,
+        private readonly Configuration $configurationService,
         private readonly Registry $registry,
         private readonly LoggerInterface $logger = new NullLogger(),
     ) {}

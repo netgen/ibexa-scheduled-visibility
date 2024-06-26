@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums;
+namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\Enum;
 
 enum VisibilityUpdateResult: string
 {
