@@ -51,7 +51,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
             'l',
             InputOption::VALUE_OPTIONAL,
             'Number of content object to process in a single iteration',
-            50,
+            1024,
         );
     }
 
@@ -93,26 +93,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
             return Command::FAILURE;
         }
 
-        $contentTypeIds = [];
-        if (!$allContentTypes && count($allowedContentTypes) > 0) {
-            foreach ($allowedContentTypes as $allowedContentType) {
-                try {
-                    $contentTypeIds[] = $this->repository->getContentTypeService()->loadContentTypeByIdentifier($allowedContentType)->id;
-                } catch (NotFoundException $exception) {
-                    $this->logger->error(
-                        sprintf(
-                            "Content type with identifier '%s' does not exist: %s",
-                            $allowedContentType,
-                            $exception->getMessage(),
-                        ),
-                    );
-
-                    continue;
-                }
-            }
-        }
-
-        $pager = $this->getPager($contentTypeIds);
+        $pager = $this->getPager($allContentTypes, $allowedContentTypes);
 
         if ($pager->getNbResults() === 0) {
             $this->style->info('No content found');
@@ -213,9 +194,28 @@ final class ScheduledVisibilityUpdateCommand extends Command
         )->setParameter('content_type_ids', $contentTypeIds, Connection::PARAM_INT_ARRAY);
     }
 
-    private function getPager(array $contentTypeIds): Pagerfanta
+    private function getPager(bool $allContentTypes, array $allowedContentTypes): Pagerfanta
     {
         $query = $this->getQueryBuilder();
+
+        $contentTypeIds = [];
+        if (!$allContentTypes && count($allowedContentTypes) > 0) {
+            foreach ($allowedContentTypes as $allowedContentType) {
+                try {
+                    $contentTypeIds[] = $this->repository->getContentTypeService()->loadContentTypeByIdentifier($allowedContentType)->id;
+                } catch (NotFoundException $exception) {
+                    $this->logger->error(
+                        sprintf(
+                            "Content type with identifier '%s' does not exist: %s",
+                            $allowedContentType,
+                            $exception->getMessage(),
+                        ),
+                    );
+
+                    continue;
+                }
+            }
+        }
 
         if (count($contentTypeIds) > 0) {
             $this->applyContentTypeLimit($query, $contentTypeIds);
