@@ -29,6 +29,7 @@ use function sprintf;
 final class ScheduledVisibilityUpdateCommand extends Command
 {
     private SymfonyStyle $style;
+    private array $languageCache = [];
 
     public function __construct(
         private readonly Repository $repository,
