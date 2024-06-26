@@ -106,7 +106,6 @@ final class ScheduledVisibilityUpdateCommand extends Command
 
         $this->style->createProgressBar($pager->getNbResults());
         $this->style->progressStart();
-        $this->style->newLine();
 
         $results = $pager->getAdapter()->getSlice($offset, $limit);
         while (count($results) > 0) {
@@ -137,6 +136,8 @@ final class ScheduledVisibilityUpdateCommand extends Command
                     ),
                 );
 
+                $this->style->progressAdvance();
+
                 continue;
             }
 
@@ -159,6 +160,8 @@ final class ScheduledVisibilityUpdateCommand extends Command
                     ),
                 );
 
+                $this->style->progressAdvance();
+
                 continue;
             }
 
@@ -166,8 +169,6 @@ final class ScheduledVisibilityUpdateCommand extends Command
                 $action = $this->scheduledVisibilityService->updateVisibilityIfNeeded($content);
             } catch (InvalidStateException $exception) {
                 $this->logger->error($exception->getMessage());
-
-                continue;
             }
 
             $this->style->progressAdvance();
