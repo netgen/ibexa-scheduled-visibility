@@ -13,12 +13,17 @@ use Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibili
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityUpdateResult;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Exception\InvalidStateException;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Registry;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
+
+use function sprintf;
 
 final class ScheduledVisibilityService
 {
     public function __construct(
         private readonly ScheduledVisibilityConfiguration $configurationService,
         private readonly Registry $registry,
+        private readonly LoggerInterface $logger = new NullLogger(),
     ) {}
 
     /**
@@ -35,11 +40,15 @@ final class ScheduledVisibilityService
         if ($this->shouldBeHidden($content) && !$handler->isHidden($content)) {
             $handler->hide($content);
 
+            $this->logUpdate($content, VisibilityUpdateResult::Hidden);
+
             return VisibilityUpdateResult::Hidden;
         }
 
         if ($this->shouldBeVisible($content) && !$handler->isVisible($content)) {
             $handler->reveal($content);
+
+            $this->logUpdate($content, VisibilityUpdateResult::Revealed);
 
             return VisibilityUpdateResult::Revealed;
         }
@@ -137,5 +146,17 @@ final class ScheduledVisibilityService
         }
 
         return null;
+    }
+
+    private function logUpdate(Content $content, VisibilityUpdateResult $updateResult): void
+    {
+        $this->logger->info(
+            sprintf(
+                "Content '%s' with id #%d has been %s.",
+                $content->getName(),
+                $content->getId(),
+                $updateResult->value,
+            ),
+        );
     }
 }

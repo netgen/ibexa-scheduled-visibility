@@ -10,7 +10,6 @@ use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException;
 use Ibexa\Contracts\Core\Repository\Repository;
 use Ibexa\Contracts\Core\Repository\Values\Content\Language;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibilityConfiguration;
-use Netgen\Bundle\IbexaScheduledVisibilityBundle\Enums\VisibilityUpdateResult;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Exception\InvalidStateException;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService;
 use Pagerfanta\Doctrine\DBAL\QueryAdapter;
@@ -21,12 +20,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 use function count;
 use function sprintf;
 
-final class UpdateContentVisibilityCommand extends Command
+final class ScheduledVisibilityUpdateCommand extends Command
 {
     private SymfonyStyle $style;
 
@@ -52,13 +52,6 @@ final class UpdateContentVisibilityCommand extends Command
             'Number of content object to process in a single iteration',
             50,
         );
-        $this->addOption(
-            'ttl',
-            't',
-            InputOption::VALUE_OPTIONAL,
-            'Expiration time for language caching',
-            3600,
-        );
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output): void
@@ -71,6 +64,18 @@ final class UpdateContentVisibilityCommand extends Command
         $this->style->info(
             'This command fetches content and updates visibility based on its schedule from publish_from and publish_to fields.',
         );
+
+        $question = new ConfirmationQuestion(
+            'Continue with this action?',
+            false,
+            '/^(y)/i',
+        );
+
+        if (!$this->style->askQuestion($question)) {
+            $this->style->success('Aborted');
+
+            return Command::SUCCESS;
+        }
 
         if (!$this->configurationService->isEnabled()) {
             $this->style->warning('Scheduled visibility mechanism is disabled.');
@@ -86,8 +91,6 @@ final class UpdateContentVisibilityCommand extends Command
 
             return Command::FAILURE;
         }
-
-        $query = $this->getQueryBuilder();
 
         $contentTypeIds = [];
         if (!$allContentTypes && count($allowedContentTypes) > 0) {
@@ -108,12 +111,10 @@ final class UpdateContentVisibilityCommand extends Command
             }
         }
 
-        $this->applyContentTypeLimit($query, $contentTypeIds);
-
-        $pager = $this->getPager($query, $contentTypeIds);
+        $pager = $this->getPager($contentTypeIds);
 
         if ($pager->getNbResults() === 0) {
-            $output->writeln('No content found.');
+            $this->style->info('No content found');
 
             return Command::FAILURE;
         }
@@ -123,6 +124,7 @@ final class UpdateContentVisibilityCommand extends Command
 
         $this->style->createProgressBar($pager->getNbResults());
         $this->style->progressStart();
+        $this->style->newLine();
 
         $results = $pager->getAdapter()->getSlice($offset, $limit);
         while (count($results) > 0) {
@@ -186,17 +188,6 @@ final class UpdateContentVisibilityCommand extends Command
                 continue;
             }
 
-            if ($action !== VisibilityUpdateResult::NoChange) {
-                $this->logger->info(
-                    sprintf(
-                        "Content '%s' with id #%d has been %s.",
-                        $content->getName(),
-                        $content->getId(),
-                        $action->value,
-                    ),
-                );
-            }
-
             $this->style->progressAdvance();
         }
     }
@@ -221,9 +212,15 @@ final class UpdateContentVisibilityCommand extends Command
         )->setParameter('content_type_ids', $contentTypeIds, Connection::PARAM_INT_ARRAY);
     }
 
-    private function getPager(QueryBuilder $query, array $contentTypeIds): Pagerfanta
+    private function getPager(array $contentTypeIds): Pagerfanta
     {
-        $countQueryBuilderModifier = static function (QueryBuilder $queryBuilder) use ($contentTypeIds): void {
+        $query = $this->getQueryBuilder();
+
+        if (count($contentTypeIds) > 0) {
+            $this->applyContentTypeLimit($query, $contentTypeIds);
+        }
+
+        $countQueryBuilderModifier = function (QueryBuilder $queryBuilder) use ($contentTypeIds): void {
             $queryBuilder->select('COUNT(id) AS total_results')
                 ->from('ezcontentobject')
                 ->where('published != :unpublished')
@@ -231,9 +228,7 @@ final class UpdateContentVisibilityCommand extends Command
                 ->setMaxResults(1);
 
             if (count($contentTypeIds) > 0) {
-                $queryBuilder->where(
-                    $queryBuilder->expr()->in('contentclass_id', ':content_type_ids'),
-                )->setParameter('content_type_ids', $contentTypeIds, Connection::PARAM_INT_ARRAY);
+                $this->applyContentTypeLimit($queryBuilder, $contentTypeIds);
             }
         };
 

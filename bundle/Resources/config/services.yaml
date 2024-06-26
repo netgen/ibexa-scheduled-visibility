@@ -19,6 +19,9 @@ services:
         arguments:
             - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\Configuration\ScheduledVisibilityConfiguration'
             - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Registry'
+            - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: ngscheduledvisibility }
 
     Netgen\Bundle\IbexaScheduledVisibilityBundle\ScheduledVisibility\Registry:
 
@@ -62,7 +65,7 @@ services:
         tags:
             - { name: netgen.ibexa_scheduled_visibility.handler, identifier: object_state }
 
-    Netgen\Bundle\IbexaScheduledVisibilityBundle\Command\UpdateContentVisibilityCommand:
+    Netgen\Bundle\IbexaScheduledVisibilityBundle\Command\ScheduledVisibilityUpdateCommand:
         arguments:
             - '@ibexa.api.repository'
             - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\Service\ScheduledVisibilityService'
@@ -70,5 +73,5 @@ services:
             - '@ibexa.persistence.connection'
             - '@?logger'
         tags:
-            - { name: console.command, command: 'ngscheduledvisibility:content:update-visibility' }
+            - { name: console.command, command: 'ngscheduledvisibility:content:update' }
             - { name: monolog.logger, channel: ngscheduledvisibility }
