@@ -73,5 +73,5 @@ services:
             - '@ibexa.persistence.connection'
             - '@?logger'
         tags:
-            - { name: console.command, command: 'ngscheduledvisibility:content:update' }
+            - { name: console.command, command: 'ngscheduledvisibility:update' }
             - { name: monolog.logger, channel: ngscheduledvisibility }
