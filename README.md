@@ -1,5 +1,12 @@
 # Netgen's Ibexa Scheduled Visibility
 
+[![Build Status](https://img.shields.io/github/actions/workflow/status/netgen/ibexa-scheduled_visibility/tests.yml?branch=master)](https://github.com/netgen/ibexa-scheduled-visibility/actions)
+[![Read the Docs](https://img.shields.io/readthedocs/netgens-scheduled-visibility-for-ibexa-cms)](https://netgens-scheduled-visibility-for-ibexa-cms.readthedocs.io/en/latest/)
+[![Downloads](https://img.shields.io/packagist/dt/netgen/ibexa-scheduled-visibility.svg)](https://packagist.org/packages/netgen/ibexa-scheduled-visibility)
+[![Latest stable](https://img.shields.io/packagist/v/netgen/ibexa-scheduled-visibility.svg)](https://packagist.org/packages/netgen/ibexa-scheduled-visibility)
+[![PHP](https://img.shields.io/badge/PHP-8.1+-%238892BF.svg)](https://www.php.net)
+[![Ibexa](https://img.shields.io/badge/Ibexa-4.5+-orange.svg)](https://www.ibexa.co)
+
 **Netgen's Ibexa Scheduled Visibility** enables scheduled publishing of content
 based on ``publish_from`` and ``publish_to`` fields and further configuration.
 
