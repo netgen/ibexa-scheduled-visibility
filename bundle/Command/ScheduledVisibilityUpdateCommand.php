@@ -104,8 +104,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
         $limit = $input->getOption('limit');
         $offset = 0;
 
-        $this->style->createProgressBar($pager->getNbResults());
-        $this->style->progressStart();
+        $this->style->progressStart($pager->getNbResults());
 
         $results = $pager->getAdapter()->getSlice($offset, $limit);
         while (count($results) > 0) {
