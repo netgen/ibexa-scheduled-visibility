@@ -24,15 +24,8 @@ final class ScheduledVisibilityService
         private readonly LoggerInterface $logger = new NullLogger(),
     ) {}
 
-    /**
-     * @throws InvalidStateException
-     */
     public function updateVisibilityIfNeeded(Content $content, ?string $handlerIdentifier = null): VisibilityUpdateResult
     {
-        if (!$this->isValid($content)) {
-            throw new InvalidStateException($content);
-        }
-
         $handler = $this->registry->get($handlerIdentifier ?? $this->configurationService->getHandlerIdentifier());
 
         if ($this->shouldBeHidden($content) && !$handler->isHidden($content)) {
@@ -54,9 +47,19 @@ final class ScheduledVisibilityService
         return VisibilityUpdateResult::NoChange;
     }
 
+    /**
+     * @throws InvalidStateException
+     */
     public function shouldBeHidden(Content $content): bool
     {
+        if (!$this->isValid($content)) {
+            throw new InvalidStateException($content);
+        }
+
+        /** @var \Ibexa\Contracts\Core\Repository\Values\Content\Field $publishFromField */
         $publishFromField = $content->getField('publish_from');
+
+        /** @var \Ibexa\Contracts\Core\Repository\Values\Content\Field $publishToField */
         $publishToField = $content->getField('publish_to');
 
         $publishFromDateTime = $this->getDateTime($publishFromField);
@@ -79,9 +82,19 @@ final class ScheduledVisibilityService
         return false;
     }
 
+    /**
+     * @throws InvalidStateException
+     */
     public function shouldBeVisible(Content $content): bool
     {
+        if (!$this->isValid($content)) {
+            throw new InvalidStateException($content);
+        }
+
+        /** @var \Ibexa\Contracts\Core\Repository\Values\Content\Field $publishFromField */
         $publishFromField = $content->getField('publish_from');
+
+        /** @var \Ibexa\Contracts\Core\Repository\Values\Content\Field $publishToField */
         $publishToField = $content->getField('publish_to');
 
         $publishFromDateTime = $this->getDateTime($publishFromField);
