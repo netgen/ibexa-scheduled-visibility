@@ -1,6 +1,6 @@
 # Netgen's Ibexa Scheduled Visibility
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/netgen/ibexa-scheduled_visibility/tests.yml?branch=master)](https://github.com/netgen/ibexa-scheduled-visibility/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/netgen/ibexa-scheduled-visibility/tests.yml?branch=master)](https://github.com/netgen/ibexa-scheduled-visibility/actions)
 [![Read the Docs](https://img.shields.io/readthedocs/netgens-scheduled-visibility-for-ibexa-cms)](https://netgens-scheduled-visibility-for-ibexa-cms.readthedocs.io/en/latest/)
 [![Downloads](https://img.shields.io/packagist/dt/netgen/ibexa-scheduled-visibility.svg)](https://packagist.org/packages/netgen/ibexa-scheduled-visibility)
 [![Latest stable](https://img.shields.io/packagist/v/netgen/ibexa-scheduled-visibility.svg)](https://packagist.org/packages/netgen/ibexa-scheduled-visibility)
