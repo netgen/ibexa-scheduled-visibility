@@ -32,6 +32,9 @@ content will not be accepted by the mechanism and no action will be taken.
 Command
 -------
 
-Bundle contains ``UpdateContentVisibilityCommand`` that searches through configured content and, if necessary, updates its visibility.
-It can be executed by: ``bin/console ngscheduledvisibility:content:update-visibility``.
-For this mechanism to work how it is intended, this command should be set as cron job.
+Bundle contains ``ScheduledVisibilityUpdateCommand``
+that searches through configured content and, if necessary, updates its visibility.
+Command has a ``limit`` option that represents number of content objects to process in a single iteration.
+By default it is set to 1024.
+Command can be executed with: ``bin/console ngscheduledvisibility:update``.
+For this mechanism to work how it was intended, this command should be set as cron job.

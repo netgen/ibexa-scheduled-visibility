@@ -42,9 +42,9 @@ Changing visibility handlers:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In order to change :doc:`visibility handler <visibility_handling>`,
-you need to set it to either one of supported ones;
-**'content'**, **'location'**, **'content_location'**, **'section'** or **'object_state'**
-or create your own handler:
+you need to set it to one of supported ones:
+**'content'**, **'location'**, **'content_location'**, **'section'**, **'object_state'**
+or create your own :ref:`custom handler<custom_handler>`:
 
 .. code-block:: yaml
 

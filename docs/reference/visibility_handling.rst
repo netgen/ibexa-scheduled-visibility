@@ -60,6 +60,8 @@ Content that is supposed to be hidden or visible will be assigned to :ref:`confi
 
     Both object states must be in the configured object state group.
 
+.. _custom_handler:
+
 Custom handler
 ------------
 

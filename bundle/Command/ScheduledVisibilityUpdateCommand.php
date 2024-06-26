@@ -51,7 +51,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
             'limit',
             'l',
             InputOption::VALUE_OPTIONAL,
-            'Number of content object to process in a single iteration',
+            'Number of content objects to process in a single iteration',
             1024,
         );
     }
