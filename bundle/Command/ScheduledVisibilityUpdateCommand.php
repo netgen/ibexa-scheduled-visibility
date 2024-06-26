@@ -17,6 +17,7 @@ use Pagerfanta\Pagerfanta;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -104,23 +105,25 @@ final class ScheduledVisibilityUpdateCommand extends Command
         $limit = $input->getOption('limit');
         $offset = 0;
 
-        $this->style->progressStart($pager->getNbResults());
+        $progressBar = $this->style->createProgressBar($pager->getNbResults());
+        $progressBar->setFormat('debug');
+        $progressBar->start();
 
         $results = $pager->getAdapter()->getSlice($offset, $limit);
         while (count($results) > 0) {
-            $this->processResults($results);
+            $this->processResults($results, $progressBar);
             $offset += $limit;
             $results = $pager->getAdapter()->getSlice($offset, $limit);
         }
 
-        $this->style->progressFinish();
+        $progressBar->finish();
 
         $this->style->info('Done.');
 
         return Command::SUCCESS;
     }
 
-    private function processResults(array $results): void
+    private function processResults(array $results, ProgressBar $progressBar): void
     {
         foreach ($results as $result) {
             try {
@@ -135,7 +138,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
                     ),
                 );
 
-                $this->style->progressAdvance();
+                $progressBar->advance();
 
                 continue;
             }
@@ -159,7 +162,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
                     ),
                 );
 
-                $this->style->progressAdvance();
+                $progressBar->advance();
 
                 continue;
             }
@@ -170,7 +173,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
                 $this->logger->error($exception->getMessage());
             }
 
-            $this->style->progressAdvance();
+            $progressBar->advance();
         }
     }
 
