@@ -165,7 +165,7 @@ final class ScheduledVisibilityService
             sprintf(
                 "Content '%s' with id #%d has been %s.",
                 $content->getName(),
-                $content->getId(),
+                $content->id,
                 $updateResult->value,
             ),
         );

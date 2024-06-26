@@ -34,12 +34,12 @@ final class Section extends VisibilityHandler
 
     public function isHidden(Content $content): bool
     {
-        return $content->getContentInfo()->getSectionId() === $this->hiddenSectionId;
+        return $content->contentInfo->sectionId === $this->hiddenSectionId;
     }
 
     public function isVisible(Content $content): bool
     {
-        return $content->getContentInfo()->getSectionId() === $this->visibleSectionId;
+        return $content->contentInfo->sectionId === $this->visibleSectionId;
     }
 
     private function assignSection(Content $content, int $sectionId): void
@@ -48,7 +48,7 @@ final class Section extends VisibilityHandler
             function () use ($content, $sectionId): void {
                 $section = $this->sectionService->loadSection($sectionId);
 
-                $this->sectionService->assignSection($content->getContentInfo(), $section);
+                $this->sectionService->assignSection($content->contentInfo, $section);
             },
         );
     }

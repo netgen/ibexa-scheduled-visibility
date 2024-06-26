@@ -22,7 +22,7 @@ final class ContentTest extends BaseTest
         if ($scheduledVisibilityService->shouldBeVisible($content) && $handler->isHidden($content)) {
             $handler->reveal($content);
         }
-        $content = $this->getRepository()->getContentService()->loadContent($content->getContentInfo()->getId());
+        $content = $this->getRepository()->getContentService()->loadContent($content->contentInfo->id);
         self::assertEquals($handler->isHidden($content), $expectedHidden);
     }
 

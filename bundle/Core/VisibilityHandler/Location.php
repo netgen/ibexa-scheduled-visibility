@@ -20,7 +20,7 @@ final class Location extends VisibilityHandler
     {
         $this->repository->sudo(
             function () use ($content): void {
-                $locations = $this->locationService->loadLocations($content->getContentInfo());
+                $locations = $this->locationService->loadLocations($content->contentInfo);
 
                 foreach ($locations as $location) {
                     $this->locationService->hideLocation($location);
@@ -33,7 +33,7 @@ final class Location extends VisibilityHandler
     {
         $this->repository->sudo(
             function () use ($content): void {
-                $locations = $this->locationService->loadLocations($content->getContentInfo());
+                $locations = $this->locationService->loadLocations($content->contentInfo);
 
                 foreach ($locations as $location) {
                     $this->locationService->unhideLocation($location);
@@ -50,11 +50,12 @@ final class Location extends VisibilityHandler
     public function isVisible(Content $content): bool
     {
         $locations = $this->repository->sudo(
-            fn () => $this->locationService->loadLocations($content->getContentInfo()),
+            fn () => $this->locationService->loadLocations($content->contentInfo),
         );
 
+        /** @var \Ibexa\Contracts\Core\Repository\Values\Content\Location $location */
         foreach ($locations as $location) {
-            if ($location->isHidden()) {
+            if ($location->hidden) {
                 return false;
             }
         }

@@ -57,7 +57,7 @@ final class ObjectState extends VisibilityHandler
                 $objectStateGroup = $objectState->getObjectStateGroup();
 
                 $this->objectStateService->setContentState(
-                    $content->getContentInfo(),
+                    $content->contentInfo,
                     $objectStateGroup,
                     $objectState,
                 );
@@ -73,7 +73,7 @@ final class ObjectState extends VisibilityHandler
             function () use ($content, $objectStateGroupId): ObjectStateValue {
                 $objectStateGroup = $this->objectStateService->loadObjectStateGroup($objectStateGroupId);
 
-                return $this->objectStateService->getContentState($content->getContentInfo(), $objectStateGroup);
+                return $this->objectStateService->getContentState($content->contentInfo, $objectStateGroup);
             },
         );
     }

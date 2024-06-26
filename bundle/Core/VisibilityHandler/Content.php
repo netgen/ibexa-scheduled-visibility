@@ -19,24 +19,24 @@ final class Content extends VisibilityHandler
     public function hide(ContentValue $content): void
     {
         $this->repository->sudo(
-            fn () => $this->contentService->hideContent($content->getContentInfo()),
+            fn () => $this->contentService->hideContent($content->contentInfo),
         );
     }
 
     public function reveal(ContentValue $content): void
     {
         $this->repository->sudo(
-            fn () => $this->contentService->revealContent($content->getContentInfo()),
+            fn () => $this->contentService->revealContent($content->contentInfo),
         );
     }
 
     public function isHidden(ContentValue $content): bool
     {
-        return $content->getContentInfo()->isHidden();
+        return $content->contentInfo->isHidden;
     }
 
     public function isVisible(ContentValue $content): bool
     {
-        return !$content->getContentInfo()->isHidden();
+        return !$content->contentInfo->isHidden;
     }
 }
