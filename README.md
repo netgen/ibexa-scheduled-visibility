@@ -10,6 +10,10 @@
 **Netgen's Ibexa Scheduled Visibility** enables scheduled publishing of content
 based on ``publish_from`` and ``publish_to`` fields and further configuration.
 
+See the
+[documentation](https://netgens-scheduled-visibility-for-ibexa-cms.readthedocs.io/en/latest/)
+for more details.
+
 ## Installation
 
 To install Ibexa CMS Scheduled Visibility first add it as a dependency to your project:
