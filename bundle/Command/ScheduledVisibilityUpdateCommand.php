@@ -168,7 +168,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
             }
 
             try {
-                $action = $this->scheduledVisibilityService->updateVisibilityIfNeeded($content);
+                $this->scheduledVisibilityService->updateVisibilityIfNeeded($content);
             } catch (InvalidStateException $exception) {
                 $this->logger->error($exception->getMessage());
             }
