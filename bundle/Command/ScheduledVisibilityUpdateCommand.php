@@ -68,7 +68,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
 
         $question = new ConfirmationQuestion(
             'Continue with this action?',
-            false,
+            true,
             '/^(y)/i',
         );
 
