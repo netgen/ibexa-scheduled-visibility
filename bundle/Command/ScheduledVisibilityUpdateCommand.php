@@ -24,6 +24,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+use Throwable;
 use function count;
 use function sprintf;
 
@@ -153,12 +154,12 @@ final class ScheduledVisibilityUpdateCommand extends Command
                         [$language->getLanguageCode()],
                     ),
                 );
-            } catch (NotFoundException $exception) {
+            } catch (Throwable $throwable) {
                 $this->logger->error(
                     sprintf(
-                        'Content with id #%d does not exist: %s',
+                        'An error occurred when loading Content #%d: %s',
                         $contentId,
-                        $exception->getMessage(),
+                        $throwable->getMessage(),
                     ),
                 );
 
