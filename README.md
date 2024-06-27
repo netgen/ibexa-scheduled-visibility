@@ -1,4 +1,4 @@
-# Netgen's Ibexa Scheduled Visibility
+# Netgen's Scheduled Visibility for Ibexa CMS
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/netgen/ibexa-scheduled-visibility/tests.yaml?branch=master)](https://github.com/netgen/ibexa-scheduled-visibility/actions)
 [![Read the Docs](https://img.shields.io/readthedocs/netgens-scheduled-visibility-for-ibexa-cms)](https://netgens-scheduled-visibility-for-ibexa-cms.readthedocs.io/en/latest/)
