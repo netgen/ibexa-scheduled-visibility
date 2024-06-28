@@ -105,7 +105,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
 
         $since = $input->getOption('since');
         $since = $since === null ? $since : (int) $since;
-        $pager = $this->getPager($allContentTypes, $allowedContentTypes, $since);
+        $pager = $this->getPager($since);
 
         if ($pager->getNbResults() === 0) {
             $this->style->info('No content found');
@@ -234,26 +234,9 @@ final class ScheduledVisibilityUpdateCommand extends Command
         ;
     }
 
-    private function getPager(bool $allContentTypes, array $allowedContentTypes, ?int $since): Pagerfanta
+    private function getPager(?int $since): Pagerfanta
     {
-        $contentTypeIds = [];
-        if (!$allContentTypes && count($allowedContentTypes) > 0) {
-            foreach ($allowedContentTypes as $allowedContentType) {
-                try {
-                    $contentTypeIds[] = $this->repository->getContentTypeService()->loadContentTypeByIdentifier($allowedContentType)->id;
-                } catch (NotFoundException $exception) {
-                    $this->logger->error(
-                        sprintf(
-                            "Content type with identifier '%s' does not exist: %s",
-                            $allowedContentType,
-                            $exception->getMessage(),
-                        ),
-                    );
-
-                    continue;
-                }
-            }
-        }
+        $contentTypeIds = $this->getContentTypeIds();
 
         $queryBuilder = $this->getQueryBuilder($since, $contentTypeIds);
 
@@ -269,6 +252,39 @@ final class ScheduledVisibilityUpdateCommand extends Command
         };
 
         return new Pagerfanta(new QueryAdapter($queryBuilder, $countQueryBuilderModifier));
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getContentTypeIds(): array
+    {
+        $allContentTypes = $this->configurationService->isAllContentTypes();
+        $allowedContentTypes = $this->configurationService->getAllowedContentTypes();
+
+        if ($allContentTypes || count($allowedContentTypes) === 0) {
+            return [];
+        }
+
+        $contentTypeIds = [];
+
+        foreach ($allowedContentTypes as $allowedContentType) {
+            try {
+                $contentTypeIds[] = $this->repository->getContentTypeService()->loadContentTypeByIdentifier($allowedContentType)->id;
+            } catch (NotFoundException $exception) {
+                $this->logger->error(
+                    sprintf(
+                        "Content type with identifier '%s' does not exist: %s",
+                        $allowedContentType,
+                        $exception->getMessage(),
+                    ),
+                );
+
+                continue;
+            }
+        }
+
+        return $contentTypeIds;
     }
 
     private function loadLanguage(int $id): Language
