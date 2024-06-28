@@ -23,8 +23,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
-
 use Throwable;
+
 use function count;
 use function sprintf;
 
@@ -48,12 +48,20 @@ final class ScheduledVisibilityUpdateCommand extends Command
         $this->setDescription(
             'Updates content visibility based on publish_from and publish_to attributes and configuration.',
         );
+
         $this->addOption(
             'limit',
             'l',
             InputOption::VALUE_OPTIONAL,
             'Number of content objects to process in a single iteration',
             1024,
+        );
+
+        $this->addOption(
+            'since',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'Process Content Items modified since the given number of days',
         );
     }
 
@@ -95,7 +103,9 @@ final class ScheduledVisibilityUpdateCommand extends Command
             return Command::FAILURE;
         }
 
-        $pager = $this->getPager($allContentTypes, $allowedContentTypes);
+        $since = $input->getOption('since');
+        $since = $since === null ? $since : (int) $since;
+        $pager = $this->getPager($allContentTypes, $allowedContentTypes, $since);
 
         if ($pager->getNbResults() === 0) {
             $this->style->info('No content found');
@@ -178,17 +188,34 @@ final class ScheduledVisibilityUpdateCommand extends Command
         }
     }
 
-    private function getQueryBuilder(): QueryBuilder
+    private function getQueryBuilder(?int $since): QueryBuilder
     {
         $query = $this->connection->createQueryBuilder();
         $query
             ->select('id', 'initial_language_id')
             ->from('ezcontentobject')
             ->where('published != :unpublished')
+
             ->orderBy('id', 'ASC')
             ->setParameter('unpublished', 0);
 
+        $this->applySince($query, $since);
+
         return $query;
+    }
+
+    private function applySince(QueryBuilder $query, ?int $since): void
+    {
+        if ($since === null) {
+            return;
+        }
+
+        $since = time() - ($since * 86400);
+
+        $query
+            ->andWhere($query->expr()->gte('modified', ':modified'))
+            ->setParameter('modified', $since)
+        ;
     }
 
     private function applyContentTypeLimit(QueryBuilder $query, array $contentTypeIds): void
@@ -198,9 +225,9 @@ final class ScheduledVisibilityUpdateCommand extends Command
         )->setParameter('content_type_ids', $contentTypeIds, Connection::PARAM_INT_ARRAY);
     }
 
-    private function getPager(bool $allContentTypes, array $allowedContentTypes): Pagerfanta
+    private function getPager(bool $allContentTypes, array $allowedContentTypes, ?int $since): Pagerfanta
     {
-        $query = $this->getQueryBuilder();
+        $query = $this->getQueryBuilder($since);
 
         $contentTypeIds = [];
         if (!$allContentTypes && count($allowedContentTypes) > 0) {
@@ -225,12 +252,14 @@ final class ScheduledVisibilityUpdateCommand extends Command
             $this->applyContentTypeLimit($query, $contentTypeIds);
         }
 
-        $countQueryBuilderModifier = function (QueryBuilder $queryBuilder) use ($contentTypeIds): void {
+        $countQueryBuilderModifier = function (QueryBuilder $queryBuilder) use ($contentTypeIds, $since): void {
             $queryBuilder->select('COUNT(id) AS total_results')
                 ->from('ezcontentobject')
                 ->where('published != :unpublished')
                 ->setParameter('unpublished', 0)
                 ->setMaxResults(1);
+
+            $this->applySince($queryBuilder, $since);
 
             if (count($contentTypeIds) > 0) {
                 $this->applyContentTypeLimit($queryBuilder, $contentTypeIds);
