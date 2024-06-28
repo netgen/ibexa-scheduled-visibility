@@ -188,23 +188,27 @@ final class ScheduledVisibilityUpdateCommand extends Command
         }
     }
 
-    private function getQueryBuilder(?int $since): QueryBuilder
+    /**
+     * @param int[] $contentTypeIds
+     */
+    private function getQueryBuilder(?int $since, array $contentTypeIds): QueryBuilder
     {
-        $query = $this->connection->createQueryBuilder();
-        $query
+        $queryBuilder = $this->connection->createQueryBuilder();
+
+        $queryBuilder
             ->select('id', 'initial_language_id')
             ->from('ezcontentobject')
             ->where('published != :unpublished')
-
             ->orderBy('id', 'ASC')
             ->setParameter('unpublished', 0);
 
-        $this->applySince($query, $since);
+        $this->applySince($queryBuilder, $since);
+        $this->applyContentTypes($queryBuilder, $contentTypeIds);
 
-        return $query;
+        return $queryBuilder;
     }
 
-    private function applySince(QueryBuilder $query, ?int $since): void
+    private function applySince(QueryBuilder $queryBuilder, ?int $since): void
     {
         if ($since === null) {
             return;
@@ -212,14 +216,18 @@ final class ScheduledVisibilityUpdateCommand extends Command
 
         $since = time() - ($since * 86400);
 
-        $query
-            ->andWhere($query->expr()->gte('modified', ':modified'))
+        $queryBuilder
+            ->andWhere($queryBuilder->expr()->gte('modified', ':modified'))
             ->setParameter('modified', $since)
         ;
     }
 
-    private function applyContentTypeLimit(QueryBuilder $query, array $contentTypeIds): void
+    private function applyContentTypes(QueryBuilder $query, array $contentTypeIds): void
     {
+        if (count($contentTypeIds) === 0) {
+            return;
+        }
+
         $query->where(
             $query->expr()->in('contentclass_id', ':content_type_ids'),
         )->setParameter('content_type_ids', $contentTypeIds, Connection::PARAM_INT_ARRAY);
@@ -227,8 +235,6 @@ final class ScheduledVisibilityUpdateCommand extends Command
 
     private function getPager(bool $allContentTypes, array $allowedContentTypes, ?int $since): Pagerfanta
     {
-        $query = $this->getQueryBuilder($since);
-
         $contentTypeIds = [];
         if (!$allContentTypes && count($allowedContentTypes) > 0) {
             foreach ($allowedContentTypes as $allowedContentType) {
@@ -248,11 +254,9 @@ final class ScheduledVisibilityUpdateCommand extends Command
             }
         }
 
-        if (count($contentTypeIds) > 0) {
-            $this->applyContentTypeLimit($query, $contentTypeIds);
-        }
+        $queryBuilder = $this->getQueryBuilder($since, $contentTypeIds);
 
-        $countQueryBuilderModifier = function (QueryBuilder $queryBuilder) use ($contentTypeIds, $since): void {
+        $countQueryBuilderModifier = function (QueryBuilder $queryBuilder) use ($since, $contentTypeIds): void {
             $queryBuilder->select('COUNT(id) AS total_results')
                 ->from('ezcontentobject')
                 ->where('published != :unpublished')
@@ -260,13 +264,10 @@ final class ScheduledVisibilityUpdateCommand extends Command
                 ->setMaxResults(1);
 
             $this->applySince($queryBuilder, $since);
-
-            if (count($contentTypeIds) > 0) {
-                $this->applyContentTypeLimit($queryBuilder, $contentTypeIds);
-            }
+            $this->applyContentTypes($queryBuilder, $contentTypeIds);
         };
 
-        return new Pagerfanta(new QueryAdapter($query, $countQueryBuilderModifier));
+        return new Pagerfanta(new QueryAdapter($queryBuilder, $countQueryBuilderModifier));
     }
 
     private function loadLanguage(int $id): Language
