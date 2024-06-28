@@ -228,9 +228,10 @@ final class ScheduledVisibilityUpdateCommand extends Command
             return;
         }
 
-        $query->where(
-            $query->expr()->in('contentclass_id', ':content_type_ids'),
-        )->setParameter('content_type_ids', $contentTypeIds, Connection::PARAM_INT_ARRAY);
+        $query
+            ->andWhere($query->expr()->in('contentclass_id', ':content_type_ids'))
+            ->setParameter('content_type_ids', $contentTypeIds, Connection::PARAM_INT_ARRAY)
+        ;
     }
 
     private function getPager(bool $allContentTypes, array $allowedContentTypes, ?int $since): Pagerfanta
