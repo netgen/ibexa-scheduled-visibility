@@ -129,7 +129,7 @@ final class Configuration implements ConfigurationInterface
                             ?->end()
                         ->end()
                         ->arrayNode('hidden')
-                            ->info('Configure hidden bject states and groups used for scheduled visibility mechanism')
+                            ->info('Configure hidden object states and groups used for scheduled visibility mechanism')
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->integerNode('object_state_id')
