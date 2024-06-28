@@ -9,12 +9,13 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\Registry;
 
 use function sprintf;
 
 final class ScheduledVisibilityHandlerRegistrationPass implements CompilerPassInterface
 {
-    private string $handlerRegistryId = 'Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\Registry';
+    private string $handlerRegistryId = Registry::class;
     private string $handlerTag = 'netgen.ibexa_scheduled_visibility.handler';
 
     public function process(ContainerBuilder $container): void
