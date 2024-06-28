@@ -41,7 +41,7 @@ final class Configuration implements ConfigurationInterface
                     ->booleanNode('enabled')
                         ->defaultFalse()
                     ->end()
-                ->end();
+                ?->end();
     }
 
     private function addHandlerSection(ArrayNodeDefinition $nodeDefinition): void
@@ -52,7 +52,7 @@ final class Configuration implements ConfigurationInterface
                     ->info('Configure handler for scheduled visibility mechanism')
                     ->defaultValue('content')
                 ->end()
-            ->end();
+            ?->end();
     }
 
     private function addContentTypesSection(ArrayNodeDefinition $nodeDefinition): void
@@ -69,10 +69,10 @@ final class Configuration implements ConfigurationInterface
                         ->booleanNode('all')
                             ->defaultFalse()
                         ->end()
-                        ->arrayNode('allowed')
+                        ?->arrayNode('allowed')
                             ->scalarPrototype()
                         ->end()
-                    ->end()
+                    ?->end()
                 ->end()
             ->end();
     }
@@ -92,7 +92,7 @@ final class Configuration implements ConfigurationInterface
                                 ->integerNode('section_id')
                                     ->defaultValue(0)
                                 ->end()
-                            ->end()
+                            ?->end()
                         ->end()
                         ->arrayNode('hidden')
                             ->info('Configure hidden section id used for scheduled visibility mechanism')
@@ -101,7 +101,7 @@ final class Configuration implements ConfigurationInterface
                                 ->integerNode('section_id')
                                     ->defaultValue(0)
                                 ->end()
-                            ->end()
+                            ?->end()
                         ->end()
                     ->end()
                 ->end()
@@ -119,14 +119,14 @@ final class Configuration implements ConfigurationInterface
                         ->integerNode('object_state_group_id')
                             ->defaultValue(0)
                          ->end()
-                        ->arrayNode('visible')
+                        ?->arrayNode('visible')
                             ->info('Configure visible object states and groups used for scheduled visibility mechanism')
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->integerNode('object_state_id')
                                     ->defaultValue(0)
                                 ->end()
-                            ->end()
+                            ?->end()
                         ->end()
                         ->arrayNode('hidden')
                             ->info('Configure hidden bject states and groups used for scheduled visibility mechanism')
@@ -135,7 +135,7 @@ final class Configuration implements ConfigurationInterface
                                 ->integerNode('object_state_id')
                                     ->defaultValue(0)
                                 ->end()
-                            ->end()
+                            ?->end()
                         ->end()
                     ->end()
                 ->end()
