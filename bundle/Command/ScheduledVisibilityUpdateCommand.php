@@ -6,7 +6,10 @@ namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Command;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Ibexa\Contracts\Core\Repository\ContentService;
+use Ibexa\Contracts\Core\Repository\ContentTypeService;
 use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException;
+use Ibexa\Contracts\Core\Repository\LanguageService;
 use Ibexa\Contracts\Core\Repository\Repository;
 use Ibexa\Contracts\Core\Repository\Values\Content\Language;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\Configuration;
@@ -35,6 +38,9 @@ final class ScheduledVisibilityUpdateCommand extends Command
 
     public function __construct(
         private readonly Repository $repository,
+        private readonly ContentService $contentService,
+        private readonly ContentTypeService $contentTypeService,
+        private readonly LanguageService $languageService,
         private readonly ScheduledVisibilityService $scheduledVisibilityService,
         private readonly Configuration $configurationService,
         private readonly Connection $connection,
@@ -159,7 +165,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
 
                 /** @var \Ibexa\Contracts\Core\Repository\Values\Content\Content $content */
                 $content = $this->repository->sudo(
-                    fn () => $this->repository->getContentService()->loadContent(
+                    fn () => $this->contentService->loadContent(
                         $contentId,
                         [$language->getLanguageCode()],
                     ),
@@ -222,6 +228,9 @@ final class ScheduledVisibilityUpdateCommand extends Command
         ;
     }
 
+    /**
+     * @param int[] $contentTypeIds
+     */
     private function applyContentTypes(QueryBuilder $query, array $contentTypeIds): void
     {
         if (count($contentTypeIds) === 0) {
@@ -270,7 +279,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
 
         foreach ($allowedContentTypes as $allowedContentType) {
             try {
-                $contentTypeIds[] = $this->repository->getContentTypeService()->loadContentTypeByIdentifier($allowedContentType)->id;
+                $contentTypeIds[] = $this->contentTypeService->loadContentTypeByIdentifier($allowedContentType)->id;
             } catch (NotFoundException $exception) {
                 $this->logger->error(
                     sprintf(
@@ -290,7 +299,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
     private function loadLanguage(int $id): Language
     {
         if (!isset($this->languageCache[$id])) {
-            $language = $this->repository->getContentLanguageService()->loadLanguageById($id);
+            $language = $this->languageService->loadLanguageById($id);
             $this->languageCache[$id] = $language;
         }
 

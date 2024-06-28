@@ -68,6 +68,9 @@ services:
     Netgen\Bundle\IbexaScheduledVisibilityBundle\Command\ScheduledVisibilityUpdateCommand:
         arguments:
             - '@ibexa.api.repository'
+            - '@ibexa.api.service.content'
+            - '@ibexa.api.service.content_type'
+            - '@ibexa.api.service.language'
             - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\ScheduledVisibilityService'
             - '@Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\Configuration'
             - '@ibexa.persistence.connection'
