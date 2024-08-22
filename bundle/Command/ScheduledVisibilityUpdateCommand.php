@@ -11,6 +11,7 @@ use Ibexa\Contracts\Core\Repository\ContentTypeService;
 use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException;
 use Ibexa\Contracts\Core\Repository\LanguageService;
 use Ibexa\Contracts\Core\Repository\Repository;
+use Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo;
 use Ibexa\Contracts\Core\Repository\Values\Content\Language;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\Configuration;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\Exception\InvalidStateException;
@@ -30,6 +31,7 @@ use Throwable;
 
 use function count;
 use function sprintf;
+use function time;
 
 final class ScheduledVisibilityUpdateCommand extends Command
 {
@@ -205,8 +207,10 @@ final class ScheduledVisibilityUpdateCommand extends Command
             ->select('id', 'initial_language_id')
             ->from('ezcontentobject')
             ->where('published != :unpublished')
+            ->andWhere('status != :trashed')
             ->orderBy('id', 'ASC')
-            ->setParameter('unpublished', 0);
+            ->setParameter('unpublished', 0)
+            ->setParameter('trashed', ContentInfo::STATUS_TRASHED);
 
         $this->applySince($queryBuilder, $since);
         $this->applyContentTypes($queryBuilder, $contentTypeIds);
@@ -254,6 +258,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
                 ->from('ezcontentobject')
                 ->where('published != :unpublished')
                 ->setParameter('unpublished', 0)
+                ->setParameter('trashed', ContentInfo::STATUS_TRASHED)
                 ->setMaxResults(1);
 
             $this->applySince($queryBuilder, $since);
