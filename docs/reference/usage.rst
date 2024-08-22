@@ -39,4 +39,4 @@ By default it is set to 1024.
 The command also has a ``since`` option that limits processing to content items modified since the given number of days.
 By default it is not set, which means all items will be processed.
 Command can be executed with: ``bin/console ngscheduledvisibility:update``.
-For this mechanism to work how it was intended, this command should be set as cron job.
+For this mechanism to work how it was intended, this command should be set as cron job with ``--no-interaction`` option.
