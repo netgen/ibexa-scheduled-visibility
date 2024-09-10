@@ -146,7 +146,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
     {
         foreach ($results as $result) {
             try {
-                $languageId = $result['initial_language_id'];
+                $languageId = (int) $result['initial_language_id'];
                 $language = $this->loadLanguage($languageId);
             } catch (NotFoundException $exception) {
                 $this->logger->error(
