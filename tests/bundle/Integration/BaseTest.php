@@ -7,7 +7,7 @@ namespace Netgen\IbexaScheduledVisibility\Tests\Integration;
 use DateTime;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
-use Ibexa\Tests\Integration\Core\Repository\BaseTest as APIBaseTest;
+use Ibexa\Tests\Integration\Core\Repository\BaseTestCase as APIBaseTest;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\ScheduledVisibilityService;
 
 abstract class BaseTest extends APIBaseTest
