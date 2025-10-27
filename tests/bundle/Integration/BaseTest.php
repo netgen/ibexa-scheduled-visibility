@@ -93,14 +93,14 @@ abstract class BaseTest extends APIBaseTest
         $typeCreate->creatorId = $this->generateId('user', $permissionResolver->getCurrentUserReference()->getUserId());
         $typeCreate->creationDate = $this->createDateTime();
 
-        $publishFromFieldCreate = $contentTypeService->newFieldDefinitionCreateStruct('publish_from', 'ezdate');
+        $publishFromFieldCreate = $contentTypeService->newFieldDefinitionCreateStruct('publish_from', 'ibexa_date');
         $publishFromFieldCreate->names = [
             'eng-GB' => 'Publish from',
         ];
         $publishFromFieldCreate->position = 1;
         $typeCreate->addFieldDefinition($publishFromFieldCreate);
 
-        $publishToFieldCreate = $contentTypeService->newFieldDefinitionCreateStruct('publish_to', 'ezdatetime');
+        $publishToFieldCreate = $contentTypeService->newFieldDefinitionCreateStruct('publish_to', 'ibexa_datetime');
         $publishToFieldCreate->names = [
             'eng-GB' => 'Publish to',
         ];

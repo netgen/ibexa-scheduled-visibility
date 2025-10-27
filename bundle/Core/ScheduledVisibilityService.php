@@ -132,8 +132,8 @@ final class ScheduledVisibilityService
         }
 
         if (
-            ($publishFromField->fieldTypeIdentifier !== 'ezdatetime' && $publishFromField->fieldTypeIdentifier !== 'ezdate')
-            || ($publishToField->fieldTypeIdentifier !== 'ezdatetime' && $publishToField->fieldTypeIdentifier !== 'ezdate')
+            ($publishFromField->fieldTypeIdentifier !== 'ibexa_datetime' && $publishFromField->fieldTypeIdentifier !== 'ibexa_date')
+            || ($publishToField->fieldTypeIdentifier !== 'ibexa_datetime' && $publishToField->fieldTypeIdentifier !== 'ibexa_date')
         ) {
             return false;
         }
