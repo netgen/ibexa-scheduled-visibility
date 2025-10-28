@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Netgen\IbexaScheduledVisibility\Tests\Integration;
 
 use DateTime;
+use DateTimeZone;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
 use Ibexa\Tests\Integration\Core\Repository\BaseTestCase as APIBaseTest;
@@ -25,42 +26,42 @@ abstract class BaseTest extends APIBaseTest
             [
                 [
                     'publish_from' => null,
-                    'publish_to' => new DateTime('tomorrow', new \DateTimeZone('UTC')),
+                    'publish_to' => new DateTime('tomorrow', new DateTimeZone('UTC')),
                 ],
                 false,
             ],
             [
                 [
                     'publish_from' => null,
-                    'publish_to' => new DateTime('yesterday', new \DateTimeZone('UTC')),
+                    'publish_to' => new DateTime('yesterday', new DateTimeZone('UTC')),
                 ],
                 true,
             ],
             [
                 [
-                    'publish_from' => new DateTime('2 days ago', new \DateTimeZone('UTC')),
-                    'publish_to' => new DateTime('yesterday', new \DateTimeZone('UTC')),
+                    'publish_from' => new DateTime('2 days ago', new DateTimeZone('UTC')),
+                    'publish_to' => new DateTime('yesterday', new DateTimeZone('UTC')),
                 ],
                 true,
             ],
             [
                 [
-                    'publish_from' => new DateTime('yesterday', new \DateTimeZone('UTC')),
-                    'publish_to' => new DateTime('tomorrow', new \DateTimeZone('UTC')),
+                    'publish_from' => new DateTime('yesterday', new DateTimeZone('UTC')),
+                    'publish_to' => new DateTime('tomorrow', new DateTimeZone('UTC')),
                 ],
                 false,
             ],
             [
                 [
-                    'publish_from' => new DateTime('tomorrow', new \DateTimeZone('UTC')),
+                    'publish_from' => new DateTime('tomorrow', new DateTimeZone('UTC')),
                     'publish_to' => null,
                 ],
                 true,
             ],
             [
                 [
-                    'publish_from' => new DateTime('tomorrow', new \DateTimeZone('UTC')),
-                    'publish_to' => new DateTime('2 day', new \DateTimeZone('UTC')),
+                    'publish_from' => new DateTime('tomorrow', new DateTimeZone('UTC')),
+                    'publish_to' => new DateTime('2 day', new DateTimeZone('UTC')),
                 ],
                 true,
             ],
