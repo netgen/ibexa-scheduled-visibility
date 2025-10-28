@@ -6,12 +6,11 @@ namespace Netgen\IbexaScheduledVisibility\Tests\Integration;
 
 use Ibexa\Contracts\Core\Repository\Values\Content\Section as SectionValue;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler\Section;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class SectionTest extends BaseTest
 {
-    /**
-     * @dataProvider provideCases
-     */
+    #[DataProvider('provideCases')]
     public function testUpdateVisibility(array $configuration, bool $expectedHidden)
     {
         $scheduledVisibilityService = $this->getScheduledVisibilityService();

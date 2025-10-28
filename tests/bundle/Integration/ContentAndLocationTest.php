@@ -7,12 +7,11 @@ namespace Netgen\IbexaScheduledVisibility\Tests\Integration;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler\Content;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler\ContentAndLocation;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler\Location;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class ContentAndLocationTest extends BaseTest
 {
-    /**
-     * @dataProvider provideCases
-     */
+    #[DataProvider('provideCases')]
     public function testUpdateVisibility(array $configuration, bool $expectedHidden)
     {
         $scheduledVisibilityService = $this->getScheduledVisibilityService();

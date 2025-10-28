@@ -6,6 +6,7 @@ namespace Netgen\IbexaScheduledVisibility\Tests\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\DependencyInjection\NetgenIbexaScheduledVisibilityExtension;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
 {
@@ -277,9 +278,7 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideDefaultConfigurationCases
-     */
+    #[DataProvider('provideDefaultConfigurationCases')]
     public function testDefaultConfiguration(array $configuration): void
     {
         $this->load($configuration);
@@ -322,9 +321,7 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
         );
     }
 
-    /**
-     * @dataProvider provideEnabledConfigurationCases
-     */
+    #[DataProvider('provideEnabledConfigurationCases')]
     public function testEnabledConfiguration(array $configuration, bool $expectedParameterValue): void
     {
         $this->load($configuration);
@@ -335,9 +332,7 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
         );
     }
 
-    /**
-     * @dataProvider provideHandlerConfigurationCases
-     */
+    #[DataProvider('provideHandlerConfigurationCases')]
     public function testHandlerConfiguration(array $configuration, string $expectedParameterValue): void
     {
         $this->load($configuration);
@@ -348,9 +343,7 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
         );
     }
 
-    /**
-     * @dataProvider provideSectionConfigurationCases
-     */
+    #[DataProvider('provideSectionConfigurationCases')]
     public function testSectionConfiguration(array $configuration, array $expectedParameterValues): void
     {
         $this->load($configuration);
@@ -365,9 +358,7 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
         );
     }
 
-    /**
-     * @dataProvider provideObjectStateConfigurationCases
-     */
+    #[DataProvider('provideObjectStateConfigurationCases')]
     public function testObjectStateConfiguration(array $configuration, array $expectedParameterValues): void
     {
         $this->load($configuration);
@@ -386,9 +377,7 @@ final class NetgenIbexaScheduledVisibilityTest extends AbstractExtensionTestCase
         );
     }
 
-    /**
-     * @dataProvider provideContentTypesConfigurationCases
-     */
+    #[DataProvider('provideContentTypesConfigurationCases')]
     public function testContentTypesConfiguration(array $configuration, array $expectedParameterValues): void
     {
         $this->load($configuration);

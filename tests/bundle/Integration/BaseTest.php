@@ -7,7 +7,7 @@ namespace Netgen\IbexaScheduledVisibility\Tests\Integration;
 use DateTime;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
-use Ibexa\Tests\Integration\Core\Repository\BaseTest as APIBaseTest;
+use Ibexa\Tests\Integration\Core\Repository\BaseTestCase as APIBaseTest;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\ScheduledVisibilityService;
 
 abstract class BaseTest extends APIBaseTest
@@ -25,42 +25,42 @@ abstract class BaseTest extends APIBaseTest
             [
                 [
                     'publish_from' => null,
-                    'publish_to' => new DateTime('tomorrow'),
+                    'publish_to' => new DateTime('tomorrow', new \DateTimeZone('UTC')),
                 ],
                 false,
             ],
             [
                 [
                     'publish_from' => null,
-                    'publish_to' => new DateTime('yesterday'),
+                    'publish_to' => new DateTime('yesterday', new \DateTimeZone('UTC')),
                 ],
                 true,
             ],
             [
                 [
-                    'publish_from' => new DateTime('2 days ago'),
-                    'publish_to' => new DateTime('yesterday'),
+                    'publish_from' => new DateTime('2 days ago', new \DateTimeZone('UTC')),
+                    'publish_to' => new DateTime('yesterday', new \DateTimeZone('UTC')),
                 ],
                 true,
             ],
             [
                 [
-                    'publish_from' => new DateTime('yesterday'),
-                    'publish_to' => new DateTime('tomorrow'),
+                    'publish_from' => new DateTime('yesterday', new \DateTimeZone('UTC')),
+                    'publish_to' => new DateTime('tomorrow', new \DateTimeZone('UTC')),
                 ],
                 false,
             ],
             [
                 [
-                    'publish_from' => new DateTime('tomorrow'),
+                    'publish_from' => new DateTime('tomorrow', new \DateTimeZone('UTC')),
                     'publish_to' => null,
                 ],
                 true,
             ],
             [
                 [
-                    'publish_from' => new DateTime('tomorrow'),
-                    'publish_to' => new DateTime('2 day'),
+                    'publish_from' => new DateTime('tomorrow', new \DateTimeZone('UTC')),
+                    'publish_to' => new DateTime('2 day', new \DateTimeZone('UTC')),
                 ],
                 true,
             ],
@@ -93,14 +93,14 @@ abstract class BaseTest extends APIBaseTest
         $typeCreate->creatorId = $this->generateId('user', $permissionResolver->getCurrentUserReference()->getUserId());
         $typeCreate->creationDate = $this->createDateTime();
 
-        $publishFromFieldCreate = $contentTypeService->newFieldDefinitionCreateStruct('publish_from', 'ezdate');
+        $publishFromFieldCreate = $contentTypeService->newFieldDefinitionCreateStruct('publish_from', 'ibexa_date');
         $publishFromFieldCreate->names = [
             'eng-GB' => 'Publish from',
         ];
         $publishFromFieldCreate->position = 1;
         $typeCreate->addFieldDefinition($publishFromFieldCreate);
 
-        $publishToFieldCreate = $contentTypeService->newFieldDefinitionCreateStruct('publish_to', 'ezdatetime');
+        $publishToFieldCreate = $contentTypeService->newFieldDefinitionCreateStruct('publish_to', 'ibexa_datetime');
         $publishToFieldCreate->names = [
             'eng-GB' => 'Publish to',
         ];

@@ -6,12 +6,11 @@ namespace Netgen\IbexaScheduledVisibility\Tests\Integration;
 
 use Ibexa\Contracts\Core\Repository\Values\ObjectState\ObjectState as ObjectStateValue;
 use Netgen\Bundle\IbexaScheduledVisibilityBundle\Core\VisibilityHandler\ObjectState;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class ObjectStateTest extends BaseTest
 {
-    /**
-     * @dataProvider provideCases
-     */
+    #[DataProvider('provideCases')]
     public function testUpdateVisibility(array $configuration, bool $expectedHidden)
     {
         $scheduledVisibilityService = $this->getScheduledVisibilityService();
