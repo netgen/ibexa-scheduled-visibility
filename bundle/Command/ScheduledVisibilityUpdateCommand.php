@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Netgen\Bundle\IbexaScheduledVisibilityBundle\Command;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Ibexa\Contracts\Core\Repository\ContentService;
@@ -205,7 +206,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
 
         $queryBuilder
             ->select('id', 'initial_language_id')
-            ->from('ezcontentobject')
+            ->from('ibexa_content')
             ->where('published != :unpublished')
             ->andWhere('status != :trashed')
             ->orderBy('id', 'ASC')
@@ -242,8 +243,8 @@ final class ScheduledVisibilityUpdateCommand extends Command
         }
 
         $query
-            ->andWhere($query->expr()->in('contentclass_id', ':content_type_ids'))
-            ->setParameter('content_type_ids', $contentTypeIds, Connection::PARAM_INT_ARRAY)
+            ->andWhere($query->expr()->in('content_type_id', ':content_type_ids'))
+            ->setParameter('content_type_ids', $contentTypeIds, ArrayParameterType::INTEGER)
         ;
     }
 
@@ -255,7 +256,7 @@ final class ScheduledVisibilityUpdateCommand extends Command
 
         $countQueryBuilderModifier = function (QueryBuilder $queryBuilder) use ($since, $contentTypeIds): void {
             $queryBuilder->select('COUNT(id) AS total_results')
-                ->from('ezcontentobject')
+                ->from('ibexa_content')
                 ->where('published != :unpublished')
                 ->setParameter('unpublished', 0)
                 ->setParameter('trashed', ContentInfo::STATUS_TRASHED)
